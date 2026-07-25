@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Forecast | Weatherly</title>
+
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="forecast.css">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+
+<body>
+
+<div class="main-container forecast-page">
+
+    <!-- === NAVBAR === -->
+
+    <nav class="navbar">
+
+        <div class="logo">
+
+            <i class="fa-solid fa-cloud-sun"></i>
+
+            Weatherly
+
+        </div>
+
+        <ul class="nav-links">
+
+            <li>
+                <a href="index.html">
+                    Home
+                </a>
+            </li>
+
+            <li>
+                <a class="active"
+                   href="forecast.html">
+
+                    Forecast
+
+                </a>
+            </li>
+
+            <li>
+                <a href="details.html">
+
+                    Details
+
+                </a>
+            </li>
+
+            <li>
+                <a href="favorites.html">
+
+                    Favorites
+
+                </a>
+            </li>
+
+            <li>
+                <a href="about.html">
+
+                    About
+
+                </a>
+            </li>
+
+        </ul>
+
+        <button class="dark-mode-btn">
+
+            <i class="fa-solid fa-moon"></i>
+
+        </button>
+
+    </nav>
+
+    <!-- == HEADER === -->
+
+    <section class="forecast-header">
+
+        <h1>
+
+            5 Days Forecast
+
+        </h1>
+
+        <p id="forecast-city">
+
+            Loading...
+
+        </p>
+
+    </section>
+
+    <!-- === CARDS === -->
+
+    <section
+        id="forecast-container"
+        class="forecast-container">
+
+    </section>
+
+    <!-- ===== CHART ==== -->
+
+    <section class="chart-card">
+
+        <h2>
+
+            Temperature Chart
+
+        </h2>
+
+        <div class="chart-wrapper">
+
+            <canvas id="temperatureChart"></canvas>
+
+        </div>
+
+    </section>
+
+</div>
+
+<script src="forecast.js"></script>
+</body>
+</html>

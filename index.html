@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Weatherly</title>
+
+   <link rel="stylesheet" href="style.css">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+</head>
+
+<body>
+    <div class="welcome-screen" id="welcome-screen">
+    <div class="welcome-card">
+        <div class="welcome-icon">
+          <i class="fa-solid fa-cloud-sun"></i>
+       </div>
+
+        <h2>Welcome to</h2>
+        <h1>Weatherly</h1>
+        <p>
+           Search any city and explore real-time weather instantly.
+        </p>
+
+        <div class="welcome-search">
+            <input
+                type="text"
+                id="welcome-input"
+                placeholder="Search for a city..."
+            >
+            <button id="welcome-btn">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+    <div class="main-container home-page">
+
+    <!-- Navbar -->
+    <nav class="navbar">
+
+        <div class="logo">
+            <i class="fa-solid fa-cloud-sun"></i>
+            Weatherly
+        </div>
+
+        <ul class="nav-links">
+            <li>
+                <a class="active" href="index.html">Home</a>
+            </li>
+
+            <li>
+                <a href="forecast.html">Forecast</a>
+            </li>
+
+            <li>
+                <a href="details.html">Details</a>
+            </li>
+
+            <li>
+                <a href="favorites.html">Favorites</a>
+            </li>
+
+            <li>
+                <a href="about.html">About</a>
+            </li>
+
+        </ul>
+
+       <button class="dark-mode-btn">
+            <i class="fa-solid fa-moon"></i>
+       </button>
+        
+    </nav>
+
+    <section class="hero" id="hero">
+
+    <div class="search-box">
+
+        <input id="search-input" type="text" placeholder="Search for a city...">
+
+        <button id="search-btn">
+           <i class="fa-solid fa-magnifying-glass"></i>
+        </button>
+    </div>
+
+    <div class="weather-info">
+      <div class="city-row">
+        <h1 id="city-name">city</h1>
+         <button id="favorite-btn">
+
+            <i class="fa-regular fa-star"></i>
+
+        </button>
+ 
+      </div>
+      
+        <div class="temperature">
+
+            <img id="weather-icon" src="https://cdn.weatherapi.com/weather/64x64/day/113.png" alt="weather icon">
+
+            <span id="temperature">20°C</span>
+
+        </div>
+
+        <p id="weather-status">Clear</p>
+    </div>
+
+    <div class="time-card">
+
+      <h2 id="city-time">08:30 AM</h2>
+
+      <span id="city-date">Wednesday 1 December 2021</span>
+    </div>
+
+    <div class="weather-details">
+
+    <div class="detail-card">
+        <i class="fa-solid fa-droplet"></i>
+
+        <div>
+            <span>Humidity</span>
+            <h3 id="humidity">65%</h3>
+        </div>
+    </div>
+
+    <div class="detail-card">
+        <i class="fa-solid fa-wind"></i>
+
+        <div>
+            <span>Wind</span>
+            <h3 id="wind">12 km/h</h3>
+        </div>
+    </div>
+
+    <div class="detail-card">
+        <i class="fa-solid fa-gauge-high"></i>
+
+        <div>
+            <span>Pressure</span>
+            <h3 id="pressure">1012 hPa</h3>
+        </div>
+    </div>
+
+    <div class="detail-card">
+        <i class="fa-solid fa-eye"></i>
+
+        <div>
+            <span>Visibility</span>
+            <h3 id="visibility">10 km</h3>
+        </div>
+    </div>
+</div>
+</section>
+</div>
+<script src="favoritesManager.js"></script>
+<script src="app.js"></script>
+</body>
+
+</html>

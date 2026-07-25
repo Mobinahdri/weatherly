@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Favorites | Weatherly</title>
+
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="favorites.css">
+
+    <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+</head>
+
+<body>
+
+<div class="main-container inner-page favorites-page">
+
+    <!-- === NAVBAR === -->
+
+    <nav class="navbar">
+
+        <div class="logo">
+
+            <i class="fa-solid fa-cloud-sun"></i>
+
+            Weatherly
+
+        </div>
+
+        <ul class="nav-links">
+
+            <li>
+                <a href="index.html">Home</a>
+            </li>
+
+            <li>
+                <a href="forecast.html">Forecast</a>
+            </li>
+
+            <li>
+                <a href="details.html">Details</a>
+            </li>
+
+            <li>
+                <a class="active"
+                   href="favorites.html">
+                    Favorites
+                </a>
+            </li>
+
+            <li>
+                <a href="about.html">
+                    About
+                </a>
+            </li>
+
+        </ul>
+
+        <button class="dark-mode-btn">
+
+            <i class="fa-solid fa-moon"></i>
+
+        </button>
+
+    </nav>
+
+    <!-- ==== TITLE ==== -->
+
+    <section class="favorites-header">
+
+        <h1>
+
+            ⭐ My Favorite Cities
+
+        </h1>
+
+    </section>
+
+    <!-- ==== GRID ==== -->
+
+    <section
+        id="favorites-container"
+        class="favorites-grid">
+
+    </section>
+
+    <!-- === EMPTY STATE === -->
+
+    <section
+        id="empty-state"
+        class="empty-state">
+
+        <i class="fa-solid fa-star"></i>
+
+        <h2>
+
+            No Favorite Cities
+
+        </h2>
+
+        <p>
+
+            Search a city and add it to your favorites.
+
+        </p>
+
+    </section>
+
+</div>
+<script src="favoritesManager.js"></script>
+<script src="favorites.js"></script>
+
+</body>
+</html>

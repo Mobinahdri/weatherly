@@ -1,0 +1,348 @@
+/*  FORECAST PAGE */
+
+.forecast-page{
+
+    background-image:
+    linear-gradient(
+        rgba(255,255,255,.58),
+        rgba(255,255,255,.58)
+    ),
+    url("images/pages.jpg");
+
+    background-size:cover;
+    background-position:center;
+    background-repeat:no-repeat;
+
+    min-height:100vh;
+
+    overflow:hidden;
+}
+
+/*   HEADER */
+
+.forecast-header{
+
+    margin-top:10px;
+    margin-bottom:12px;
+    text-align:center;
+    color:#222;
+}
+
+.forecast-header h1{
+
+    font-size:40px;
+
+    font-weight:650;
+
+    margin-bottom:10px;
+}
+
+.forecast-header p{
+
+    font-size:18px;
+
+    color:#555;
+
+    font-weight:600;
+}
+
+/*  FORECAST CARDS */
+
+.forecast-container{
+
+    width:88%;
+
+    margin:18px auto;
+
+    display:grid;
+
+    grid-template-columns:repeat(5,1fr);
+
+    gap:16px;
+}
+
+.forecast-card{
+
+    height:235px;
+
+    border-radius:28px;
+
+    background:rgba(255,255,255,.25);
+
+    backdrop-filter:blur(18px);
+
+    border:1px solid rgba(255,255,255,.35);
+
+    box-shadow:
+    0 12px 30px rgba(0,0,0,.08);
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+    justify-content:space-evenly;
+
+    transition:.35s;
+}
+
+.forecast-card:hover{
+
+    transform:translateY(-8px);
+
+    background:rgba(255,255,255,.35);
+}
+
+.forecast-card h2{
+
+    font-size:24px;
+
+    font-weight:650;
+
+    color:#2d3748;
+
+    text-align:center;
+
+    line-height:1.2;
+}
+
+/*  ICON */
+
+.forecast-card img{
+
+    width:60px;
+
+    height:60px;
+
+    object-fit:contain;
+}
+
+/*  CONDITION */
+
+.forecast-card h3{
+
+    font-size:15px;
+
+    font-weight:600;
+
+    color:#444;
+}
+
+/*  TEMPERATURE */
+
+.max-temp{
+
+    color:#ff8a00;
+
+    font-size:30px;
+
+    font-weight:bold;
+}
+
+.min-temp{
+
+    color:#4da3ff;
+
+    font-size:18px;
+
+    font-weight:bold;
+}
+
+/* DETAILS */
+
+.forecast-card p{
+
+    font-size:15px;
+
+    color:#555;
+
+    line-height:1.2;
+}
+/*  CHART SECTION */
+
+.chart-card{
+
+    width:88%;
+
+    margin:5px auto 0;
+
+    height:200px;
+
+    border-radius:30px;
+
+    background:rgba(255,255,255,.25);
+
+    backdrop-filter:blur(18px);
+
+    border:1px solid rgba(255,255,255,.35);
+
+    box-shadow:
+    0 12px 30px rgba(0,0,0,.08);
+
+    padding:10px 30px;
+}
+
+.chart-card h2{
+
+    font-size:24px;
+
+    color:#2d3748;
+
+    margin-bottom:15px;
+}
+
+.chart-wrapper{
+
+    position:relative;
+
+    width:100%;
+
+    height:140px;
+}
+
+.chart-wrapper canvas{
+
+    width:100% !important;
+
+    height:130px !important;
+}
+
+
+/* DARK MODE */
+
+body.dark-mode .forecast-page{
+
+    background-image:
+    linear-gradient(
+        rgba(15,20,35,.60),
+        rgba(15,20,35,.60)
+    ),
+    url("images/pages.jpg");
+}
+
+body.dark-mode .forecast-header{
+
+    color:white;
+}
+
+body.dark-mode .forecast-header p{
+
+    color:#d1d5db;
+}
+
+body.dark-mode .forecast-card{
+
+    background:rgba(20,28,45,.45);
+
+    border:1px solid rgba(255,255,255,.08);
+}
+
+body.dark-mode .forecast-card h2{
+
+    color:white;
+}
+
+body.dark-mode .forecast-card h3{
+
+    color:#f3f4f6;
+}
+
+body.dark-mode .forecast-card p{
+
+    color:#d1d5db;
+}
+
+body.dark-mode .chart-card{
+
+    background:rgba(20,28,45,.45);
+
+    border:1px solid rgba(255,255,255,.08);
+}
+
+body.dark-mode .chart-card h2{
+
+    color:white;
+}
+
+
+/*  RESPONSIVE */
+
+@media(max-width:1500px){
+
+    .forecast-container{
+
+        gap:15px;
+    }
+
+    .forecast-card{
+
+        height:285px;
+    }
+
+}
+
+@media(max-width:1200px){
+
+    .forecast-container{
+
+        grid-template-columns:repeat(3,1fr);
+    }
+
+    .chart-card{
+
+        height:280px;
+    }
+
+}
+
+@media(max-width:900px){
+
+    .forecast-container{
+
+        grid-template-columns:repeat(2,1fr);
+    }
+
+}
+
+@media(max-width:650px){
+
+    body{
+
+        overflow:auto;
+    }
+
+    .forecast-container{
+
+        grid-template-columns:1fr;
+    }
+
+}
+
+
+/*  ANIMATION */
+
+.forecast-card{
+
+    animation:fadeUp .6s ease;
+}
+
+@keyframes fadeUp{
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(30px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0);
+
+    }
+
+}

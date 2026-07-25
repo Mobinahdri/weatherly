@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Details | Weatherly</title>
+
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="details.css">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+</head>
+
+<body>
+
+<div class="main-container inner-page details-page">
+
+    <!-- == NAVBAR == -->
+
+    <nav class="navbar">
+
+        <div class="logo">
+
+            <i class="fa-solid fa-cloud-sun"></i>
+
+            Weatherly
+
+        </div>
+
+        <ul class="nav-links">
+
+            <li>
+                <a href="index.html">Home</a>
+            </li>
+
+            <li>
+                <a href="forecast.html">Forecast</a>
+            </li>
+
+            <li>
+                <a class="active"
+                   href="details.html">
+                    Details
+                </a>
+            </li>
+
+            <li>
+                <a href="favorites.html">
+                    Favorites
+                </a>
+            </li>
+
+            <li>
+                <a href="about.html">
+                    About
+                </a>
+            </li>
+
+        </ul>
+
+        <button class="dark-mode-btn">
+
+            <i class="fa-solid fa-moon"></i>
+
+        </button>
+
+    </nav>
+
+    <!-- === HEADER === -->
+
+    <section class="details-header">
+
+        <h1>
+
+            Weather Details
+
+        </h1>
+
+        <p id="details-city">
+
+            Loading...
+
+        </p>
+
+    </section>
+
+    <!-- === GRID === -->
+
+    <section class="details-grid">
+
+        <!-- Humidity -->
+
+        <div class="detail-card">
+
+            <i class="fa-solid fa-droplet"></i>
+
+            <h3>Humidity</h3>
+
+            <span id="humidity">--</span>
+
+        </div>
+
+        <!-- Wind -->
+
+        <div class="detail-card">
+
+            <i class="fa-solid fa-wind"></i>
+
+            <h3>Wind</h3>
+
+            <span id="wind">--</span>
+
+        </div>
+
+        <!-- Pressure -->
+
+        <div class="detail-card">
+
+            <i class="fa-solid fa-gauge-high"></i>
+
+            <h3>Pressure</h3>
+
+            <span id="pressure">--</span>
+
+        </div>
+
+        <!-- Visibility -->
+
+        <div class="detail-card">
+
+            <i class="fa-solid fa-eye"></i>
+
+            <h3>Visibility</h3>
+
+            <span id="visibility">--</span>
+
+        </div>
+
+        <!-- Sunrise -->
+
+        <div class="detail-card">
+
+            <i class="fa-regular fa-sun"></i>
+
+            <h3>Sunrise</h3>
+
+            <span id="sunrise">--</span>
+
+        </div>
+
+        <!-- Sunset -->
+
+        <div class="detail-card">
+
+            <i class="fa-solid fa-cloud-sun"></i>
+
+            <h3>Sunset</h3>
+
+            <span id="sunset">--</span>
+
+        </div>
+
+    </section>
+
+</div>
+
+<script src="details.js"></script>
+
+</body>
+</html>
