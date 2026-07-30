@@ -4,6 +4,7 @@ const express = require("express");
 const cors = require("cors");
 
 const weatherRoutes = require("./routes/weatherRoutes");
+const chatRoutes = require("./routes/chatRoutes");
 
 const app = express();
 
@@ -15,6 +16,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/weather", weatherRoutes);
+app.use("/api/chat", chatRoutes);
 
 const PORT = process.env.PORT || 3000;
 
