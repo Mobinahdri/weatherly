@@ -2,7 +2,7 @@ const chatService = require("../services/chatService");
 
 async function createChatResponse(req, res) {
   try {
-    const { message, language, weather, history } = req.body || {};
+    const { message, language } = req.body || {};
 
     if (typeof message !== "string" || !message.trim()) {
       return res.status(400).json({
@@ -21,8 +21,6 @@ async function createChatResponse(req, res) {
     const answer = await chatService.generateResponse({
       message: message.trim(),
       language: language === "fa" ? "fa" : "en",
-      weather,
-      history,
     });
 
     return res.json({
