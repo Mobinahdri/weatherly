@@ -14,6 +14,9 @@ const FA = {
   // Search
   searchPlaceholder: "نام شهر را وارد کنید...",
 
+  // Daily weather note
+  dailyNote: "یادداشت کوچک امروز",
+
   // Weather Details
   humidity: "رطوبت",
   wind: "باد",

@@ -21,10 +21,23 @@ const assistantGreeting = document.getElementById("assistant-greeting");
 let language = localStorage.getItem("language") || "en";
 
 let currentWeather = null;
+let currentWeatherCity = "";
+let weatherRequestId = 0;
+let isSending = false;
 document.addEventListener("languageChanged", () => {
   language = localStorage.getItem("language") || "en";
 
   loadAssistantCity();
+});
+
+document.addEventListener("weatherCityChanged", (event) => {
+  const weather = event.detail;
+
+  if (!weather?.city || !weather?.current) return;
+
+  currentWeather = weather;
+  currentWeatherCity = weather.city;
+  updateAssistantCity(weather.city);
 });
 /* ==========================================
         SAFETY CHECK
@@ -56,31 +69,110 @@ function loadAssistantCity() {
   const city = localStorage.getItem("selectedCity");
 
   if (city) {
-    const dictionary = language === "fa" ? FA : EN;
+    updateAssistantCity(city);
 
-    assistantCity.textContent = `${dictionary.assistantCurrentCity}: ${
-      language === "fa" ? translateCity(city) : city
-    }`;
-
-    loadWeather(city);
+    if (!isCurrentWeatherFor(city)) {
+      loadWeather(city);
+    }
   } else {
     assistantCity.textContent =
       language === "fa" ? "شهری انتخاب نشده" : "No city selected";
+
+    currentWeather = null;
+    currentWeatherCity = "";
   }
 }
 
+function updateAssistantCity(city) {
+  if (!assistantCity) return;
+
+  const dictionary = language === "fa" ? FA : EN;
+
+  assistantCity.textContent = `${dictionary.assistantCurrentCity}: ${
+    language === "fa" ? translateCity(city) : city
+  }`;
+}
+
+function normalizeCityName(city) {
+  return String(city || "").trim().toLocaleLowerCase();
+}
+
+function isCurrentWeatherFor(city) {
+  const selected = normalizeCityName(city);
+
+  return Boolean(
+    currentWeather &&
+      selected &&
+      (normalizeCityName(currentWeatherCity) === selected ||
+        normalizeCityName(currentWeather.city) === selected ||
+        normalizeCityName(currentWeather.fullName).startsWith(selected)),
+  );
+}
+
 async function loadWeather(city) {
+  const requestId = ++weatherRequestId;
+
   try {
     const response = await fetch(`${API_URL}?city=${encodeURIComponent(city)}`);
 
     const result = await response.json();
 
-    if (result.success) {
+    if (requestId === weatherRequestId && result.success) {
       currentWeather = result.data;
+      currentWeatherCity = city;
+
+      return currentWeather;
     }
   } catch (error) {
     console.log(error);
   }
+
+  return null;
+}
+
+async function getLatestWeatherContext() {
+  const selectedCity = localStorage.getItem("selectedCity");
+
+  if (!selectedCity) return null;
+
+  if (!isCurrentWeatherFor(selectedCity)) {
+    await loadWeather(selectedCity);
+  }
+
+  if (!isCurrentWeatherFor(selectedCity)) return null;
+
+  const today = currentWeather.forecast?.[0] || null;
+
+  return {
+    city: currentWeather.city,
+    country: currentWeather.country,
+    fullName: currentWeather.fullName,
+    latitude: currentWeather.latitude,
+    longitude: currentWeather.longitude,
+    timezone: currentWeather.timezone,
+    current: {
+      temperature: currentWeather.current?.temperature,
+      feelsLike: currentWeather.current?.feelsLike,
+      humidity: currentWeather.current?.humidity,
+      windSpeed: currentWeather.current?.windSpeed,
+      visibility: currentWeather.current?.visibility,
+      cloudCover: currentWeather.current?.cloudCover,
+      uvIndex: currentWeather.current?.uvIndex,
+      condition: currentWeather.current?.condition,
+      sunrise: currentWeather.current?.sunrise,
+      sunset: currentWeather.current?.sunset,
+    },
+    today: today
+      ? {
+          date: today.date,
+          minTemp: today.minTemp,
+          maxTemp: today.maxTemp,
+          condition: today.condition,
+          description: today.description,
+          precipitationProbability: today.precipitationProbability,
+        }
+      : null,
+  };
 }
 
 /* ==========================================
@@ -95,24 +187,67 @@ assistantInput?.addEventListener("keydown", (e) => {
   }
 });
 
-function sendMessage() {
+async function sendMessage() {
   const text = assistantInput.value.trim();
 
-  if (!text) return;
+  if (!text || isSending) return;
 
   addMessage(text, "user");
 
   assistantInput.value = "";
 
   showTyping();
+  setSendingState(true);
 
-  setTimeout(() => {
-    removeTyping();
-
-    const answer = generateAnswer(text);
+  try {
+    const answer = await requestAIResponse(text);
 
     addMessage(answer, "bot");
-  }, 700);
+  } catch (error) {
+    console.error("Weatherly AI request failed:", error);
+
+    addMessage(getUnavailableMessage(), "bot");
+  } finally {
+    removeTyping();
+    setSendingState(false);
+    assistantInput.focus();
+  }
+}
+
+async function requestAIResponse(message) {
+  const weather = await getLatestWeatherContext();
+
+  const response = await fetch("http://localhost:3000/api/chat", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      message,
+      language,
+      weather,
+    }),
+  });
+
+  const result = await response.json();
+
+  if (!response.ok || !result.success || !result.data?.answer) {
+    throw new Error(result.message || "AI request failed");
+  }
+
+  return result.data.answer;
+}
+
+function getUnavailableMessage() {
+  return language === "fa"
+    ? "الان نتوانستم به هوش مصنوعی وصل شوم ☁️ لطفاً کمی بعد دوباره امتحان کنید. گزینه‌های آماده‌ی سفر، لباس، فعالیت بیرونی و ایمنی همچنان در دسترس‌اند."
+    : "I couldn't reach the AI just now ☁️ Please try again shortly. The travel, clothing, outdoor, and safety shortcuts are still available.";
+}
+
+function setSendingState(sending) {
+  isSending = sending;
+  assistantInput.disabled = sending;
+  assistantSend.disabled = sending;
 }
 
 /* ==========================================
@@ -124,7 +259,11 @@ function addMessage(text, type) {
 
   message.className = `assistant-message ${type}`;
 
-  message.innerHTML = `<p>${text}</p>`;
+  const paragraph = document.createElement("p");
+
+  paragraph.textContent = text;
+
+  message.appendChild(paragraph);
 
   assistantBody.appendChild(message);
 
