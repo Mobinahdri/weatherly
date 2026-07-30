@@ -18,6 +18,10 @@ const weatherIcon = document.getElementById("weather-icon");
 const cityName = document.getElementById("city-name");
 const temperature = document.getElementById("temperature");
 const weatherStatus = document.getElementById("weather-status");
+const weatherNote = document.getElementById("weather-note");
+const weatherNoteIcon = document.getElementById("weather-note-icon");
+const weatherNoteMessage = document.getElementById("weather-note-message");
+const weatherNoteContext = document.getElementById("weather-note-context");
 
 const cityTime = document.getElementById("city-time");
 const cityDate = document.getElementById("city-date");
@@ -79,6 +83,203 @@ function translateCondition(condition) {
   }
 
   return weatherConditions[condition] || condition;
+}
+
+/* ==========================================
+          WEATHER-BASED DAILY NOTE
+========================================== */
+
+const dailyNotes = {
+  en: {
+    seasons: {
+      spring: "Spring says: grow at your own gentle pace.",
+      summer: "Summer says: make a little room for joy.",
+      autumn: "Autumn says: change can be beautiful too.",
+      winter: "Winter says: quiet progress still counts.",
+    },
+    clear: [
+      "The sky left the light on for you—take one brave step today.",
+      "A bright day is a gentle reminder that you can begin again.",
+    ],
+    rain: [
+      "Let the rain soften the day; slow progress is still beautiful progress.",
+      "Clouds are watering tomorrow’s brighter moments. Keep growing.",
+    ],
+    snow: [
+      "The world is taking a quiet pause. You are allowed one too.",
+      "Even the coldest days can hold the warmest little moments.",
+    ],
+    cloud: [
+      "The sun is still there, even when you cannot see it. So is your spark.",
+      "A soft sky suits a gentle pace—do one good thing for yourself.",
+    ],
+    storm: [
+      "Storms pass. Stay grounded, protect your peace, and trust your strength.",
+      "Today may be loud, but your calm can be louder.",
+    ],
+    fog: [
+      "You do not need to see the whole path—just the next kind step.",
+      "Move gently through the haze; clarity often arrives along the way.",
+    ],
+    wind: [
+      "Let the wind clear some space for a fresh thought and a new start.",
+      "Breezy days are proof that change can feel refreshing.",
+    ],
+    hot: [
+      "Take it easy, drink some water, and let small wins be enough today.",
+      "Save your energy for what matters—steady is more than enough.",
+    ],
+    cold: [
+      "Wrap up warmly and carry a little kindness with you.",
+      "Cold outside, warm heart—make today cozy in your own way.",
+    ],
+    mild: [
+      "The day feels balanced—borrow a little of that calm for yourself.",
+      "A gentle day for a gentle reminder: you are doing better than you think.",
+    ],
+  },
+  fa: {
+    seasons: {
+      spring: "بهار می‌گوید: با ریتم آرام خودت رشد کن.",
+      summer: "تابستان می‌گوید: کمی برای شادی جا باز کن.",
+      autumn: "پاییز می‌گوید: تغییر هم می‌تواند زیبا باشد.",
+      winter: "زمستان می‌گوید: پیشرفت آرام هم ارزشمند است.",
+    },
+    clear: [
+      "آسمان امروز برای تو روشن است؛ فقط یک قدم شجاعانه بردار.",
+      "این روز روشن یادآوری می‌کند که همیشه می‌توانی دوباره شروع کنی.",
+    ],
+    rain: [
+      "بگذار باران روزت را آرام کند؛ پیشرفت آهسته هم زیباست.",
+      "ابرها لحظه‌های روشن فردا را آبیاری می‌کنند؛ به رشدت ادامه بده.",
+    ],
+    snow: [
+      "دنیا کمی آرام گرفته؛ تو هم اجازه داری مکث کنی.",
+      "حتی سردترین روزها هم می‌توانند گرم‌ترین لحظه‌ها را بسازند.",
+    ],
+    cloud: [
+      "خورشید هنوز پشت ابرهاست؛ درست مثل درخشش درون تو.",
+      "آسمان آرام، یک قدم آرام می‌خواهد؛ امروز با خودت مهربان باش.",
+    ],
+    storm: [
+      "طوفان‌ها می‌گذرند؛ آرامشت را حفظ کن و به قدرتت اعتماد داشته باش.",
+      "شاید امروز پرهیاهو باشد، اما آرامش تو قوی‌تر است.",
+    ],
+    fog: [
+      "لازم نیست تمام مسیر را ببینی؛ همان قدم بعدی کافی است.",
+      "آرام از میان مه عبور کن؛ وضوح در طول مسیر از راه می‌رسد.",
+    ],
+    wind: [
+      "بگذار باد برای یک فکر تازه و شروعی نو جا باز کند.",
+      "روزهای بادی یادمان می‌آورند که تغییر می‌تواند تازه‌کننده باشد.",
+    ],
+    hot: [
+      "آرام‌تر پیش برو، آب بنوش و بگذار موفقیت‌های کوچک کافی باشند.",
+      "انرژی‌ات را برای چیزهای مهم نگه دار؛ پیوسته رفتن کافی است.",
+    ],
+    cold: [
+      "گرم بپوش و کمی مهربانی با خودت همراه کن.",
+      "هوای سرد و قلب گرم؛ امروز را به سبک خودت دل‌نشین کن.",
+    ],
+    mild: [
+      "هوا متعادل است؛ کمی از این آرامش را برای خودت بردار.",
+      "یک روز ملایم و یک یادآوری ساده: بهتر از چیزی که فکر می‌کنی پیش می‌روی.",
+    ],
+  },
+};
+
+function getSeason(latitude) {
+  const month = new Date().getMonth();
+  const northernSeason = month >= 2 && month <= 4
+    ? "spring"
+    : month >= 5 && month <= 7
+      ? "summer"
+      : month >= 8 && month <= 10
+        ? "autumn"
+        : "winter";
+
+  if (Number(latitude) >= 0) {
+    return northernSeason;
+  }
+
+  return {
+    spring: "autumn",
+    summer: "winter",
+    autumn: "spring",
+    winter: "summer",
+  }[northernSeason];
+}
+
+function getNoteCategory(data) {
+  const condition = String(data.current.condition || "").toLowerCase();
+  const temperatureValue = Number(data.current.temperature);
+  const windSpeed = Number(data.current.windSpeed);
+
+  if (/thunder|storm|tornado|squall/.test(condition)) return "storm";
+  if (/snow|ice|sleet|freez/.test(condition)) return "snow";
+  if (/rain|drizzle|shower/.test(condition)) return "rain";
+  if (/fog|mist|haze|smoke/.test(condition)) return "fog";
+  if (temperatureValue >= 32) return "hot";
+  if (temperatureValue <= 5) return "cold";
+  if (windSpeed >= 35) return "wind";
+  if (/cloud|overcast/.test(condition)) return "cloud";
+  if (/clear|sun/.test(condition)) return "clear";
+
+  return "mild";
+}
+
+function getDailyNoteIndex(city, optionsLength) {
+  const dayKey = new Date().toISOString().slice(0, 10);
+  const seed = `${city}-${dayKey}`.split("").reduce(
+    (total, character) => total + character.charCodeAt(0),
+    0,
+  );
+
+  return seed % optionsLength;
+}
+
+function updateWeatherNote(data) {
+  if (!weatherNote || !weatherNoteMessage || !weatherNoteContext) return;
+
+  const language = currentLanguage === "fa" ? "fa" : "en";
+  const category = getNoteCategory(data);
+  const options = dailyNotes[language][category];
+  const season = getSeason(data.latitude);
+  const noteIndex = getDailyNoteIndex(data.city, options.length);
+  const contextLabels = {
+    en: {
+      spring: "Spring mood",
+      summer: "Summer mood",
+      autumn: "Autumn mood",
+      winter: "Winter mood",
+    },
+    fa: {
+      spring: "حال‌وهوای بهاری",
+      summer: "حال‌وهوای تابستانی",
+      autumn: "حال‌وهوای پاییزی",
+      winter: "حال‌وهوای زمستانی",
+    },
+  };
+  const icons = {
+    clear: "fa-sun",
+    rain: "fa-cloud-rain",
+    snow: "fa-snowflake",
+    cloud: "fa-cloud",
+    storm: "fa-cloud-bolt",
+    fog: "fa-smog",
+    wind: "fa-wind",
+    hot: "fa-temperature-high",
+    cold: "fa-temperature-low",
+    mild: "fa-sparkles",
+  };
+
+  weatherNoteMessage.textContent =
+    `${options[noteIndex]} ${dailyNotes[language].seasons[season]}`;
+
+  weatherNoteContext.textContent =
+    `${contextLabels[language][season]} • ${Math.round(data.current.temperature)}°C • ${data.city}`;
+  weatherNoteIcon.innerHTML = `<i class="fa-solid ${icons[category]}"></i>`;
+  weatherNote.classList.add("show");
 }
 
 /* ==========================================
@@ -268,6 +469,8 @@ function updateWeatherUI(data){
 
     visibility.textContent =
         `${Math.round(data.current.visibility)} km`;
+
+    updateWeatherNote(data);
 
     const now = new Date();
 
