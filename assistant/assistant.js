@@ -22,7 +22,6 @@ let language = localStorage.getItem("language") || "en";
 
 let currentWeather = null;
 let isSending = false;
-const conversationHistory = [];
 document.addEventListener("languageChanged", () => {
   language = localStorage.getItem("language") || "en";
 
@@ -112,11 +111,6 @@ async function sendMessage() {
   try {
     const answer = await requestAIResponse(text);
 
-    conversationHistory.push(
-      { role: "user", content: text },
-      { role: "assistant", content: answer }
-    );
-
     addMessage(answer, "bot");
   } catch (error) {
     console.error("Weatherly AI request failed:", error);
@@ -138,8 +132,6 @@ async function requestAIResponse(message) {
     body: JSON.stringify({
       message,
       language,
-      weather: currentWeather,
-      history: conversationHistory.slice(-6),
     }),
   });
 
