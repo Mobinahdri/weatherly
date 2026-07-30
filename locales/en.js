@@ -14,6 +14,9 @@ const EN = {
   // Search
   searchPlaceholder: "Search for a city...",
 
+  // Daily weather note
+  dailyNote: "A little note for today",
+
   // Weather Details
   humidity: "Humidity",
   wind: "Wind",
