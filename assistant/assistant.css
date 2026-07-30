@@ -1,0 +1,1099 @@
+/* =====================================================
+                WEATHERLY AI ASSISTANT
+===================================================== */
+
+.assistant-widget{
+
+    position:fixed;
+
+    right:30px;
+
+    bottom:40px;
+
+    z-index:9999;
+
+    font-family:inherit;
+
+    opacity:0;
+    pointer-events:none;
+    transition:.7s;
+
+}
+
+/* =====================================================
+                FLOATING GREETING
+===================================================== */
+
+.assistant-greeting{
+
+    position:absolute;
+
+    bottom:90px;
+
+    right:0;
+
+    max-width:260px;
+
+    padding:12px 18px;
+
+    border-radius:18px;
+
+    background:#ffffff;
+
+    color:#27324a;
+
+    font-size:14px;
+
+    line-height:1.6;
+
+    box-shadow:0 15px 35px rgba(0,0,0,.15);
+
+    opacity:0;
+
+    transform:translateY(15px);
+
+    pointer-events:none;
+
+    transition:.35s ease;
+
+}
+
+.assistant-greeting.show{
+
+    opacity:1;
+
+    transform:translateY(0);
+
+}
+
+.assistant-greeting::after{
+
+    content:"";
+
+    position:absolute;
+
+    right:24px;
+
+    bottom:-8px;
+
+    width:16px;
+
+    height:16px;
+
+    background:white;
+
+    transform:rotate(45deg);
+
+}
+
+/* =====================================================
+                FLOAT BUTTON
+===================================================== */
+
+.assistant-toggle{
+
+    width:72px;
+
+    height:72px;
+
+    border:none;
+
+    border-radius:50%;
+
+    background:linear-gradient(
+        135deg,
+        #114cb9,
+        #666d7a
+    );
+
+    color:white;
+
+    cursor:pointer;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    align-items:center;
+
+    gap:4px;
+
+    box-shadow:
+    0 15px 35px rgba(79,140,255,.4);
+
+    transition:.3s ease;
+
+}
+
+.assistant-toggle:hover{
+
+    transform:
+    translateY(-5px)
+    scale(1.05);
+
+}
+
+.assistant-toggle i{
+
+    font-size:24px;
+
+}
+
+.assistant-toggle span{
+
+    font-size:10px;
+
+    font-weight:600;
+
+    white-space:nowrap;
+
+}
+
+/* =====================================================
+                WINDOW
+===================================================== */
+
+.assistant-window{
+
+    position:absolute;
+
+    right:0;
+
+    bottom:90px;
+
+    width:420px;
+
+    height:560px;
+
+    background:rgba(255,255,255,.90);
+
+    backdrop-filter:blur(20px);
+
+    border-radius:26px;
+
+    overflow:hidden;
+
+    display:flex;
+
+    flex-direction:column;
+
+    box-shadow:
+    0 25px 60px rgba(0,0,0,.18);
+
+    opacity:0;
+
+    pointer-events:none;
+
+    transform:
+    translateY(25px)
+    scale(.96);
+
+    transition:.35s ease;
+
+}
+
+.assistant-window.active{
+
+    opacity:1;
+
+    pointer-events:auto;
+
+    transform:
+    translateY(0)
+    scale(1);
+
+}
+
+/* =====================================================
+                    HEADER
+===================================================== */
+
+.assistant-header{
+
+    height:78px;
+
+    padding:0 22px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    border-bottom:1px solid rgba(0,0,0,.08);
+
+}
+
+.assistant-title{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+}
+
+.assistant-title i{
+
+    width:46px;
+
+    height:46px;
+
+    border-radius:15px;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    background:#4f8cff;
+
+    color:white;
+
+    font-size:21px;
+
+    flex-shrink:0;
+
+}
+
+.assistant-title h3{
+
+    margin:0;
+
+    font-size:17px;
+
+    font-weight:700;
+
+    color:#27324a;
+
+}
+
+.assistant-title span{
+
+    display:block;
+
+    margin-top:2px;
+
+    font-size:12px;
+
+    color:#777;
+
+}
+
+.assistant-close{
+
+    border:none;
+
+    background:none;
+
+    cursor:pointer;
+
+    font-size:22px;
+
+    color:#555;
+
+    transition:.3s;
+
+}
+
+.assistant-close:hover{
+
+    transform:rotate(90deg);
+
+    color:#000;
+
+}
+/* =====================================================
+                    BODY
+===================================================== */
+
+.assistant-body{
+
+    flex:1;
+
+    padding:18px;
+
+    overflow-y:auto;
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:14px;
+
+    scroll-behavior:smooth;
+
+}
+
+.assistant-body::-webkit-scrollbar{
+
+    width:6px;
+
+}
+
+.assistant-body::-webkit-scrollbar-thumb{
+
+    background:#cfd7e6;
+
+    border-radius:10px;
+
+}
+
+/* =====================================================
+                    MESSAGES
+===================================================== */
+
+.assistant-message{
+
+    max-width:82%;
+
+    padding:14px 18px;
+
+    border-radius:20px;
+
+    font-size:14px;
+
+    line-height:1.8;
+
+    animation:assistantMessage .25s ease;
+
+    word-break:break-word;
+
+}
+
+.assistant-message p{
+
+    margin:0;
+
+}
+
+@keyframes assistantMessage{
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(12px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0);
+
+    }
+
+}
+
+/* -------------------- BOT -------------------- */
+
+.assistant-message.bot{
+
+    align-self:flex-start;
+
+    background:#eef4ff;
+
+    color:#27324a;
+
+    border-radius:20px 20px 20px 6px;
+
+}
+
+/* -------------------- USER -------------------- */
+
+.assistant-message.user{
+
+    align-self:flex-end;
+
+    background:#4f8cff;
+
+    color:#ffffff;
+
+    border-radius:20px 20px 6px 20px;
+
+}
+
+/* =====================================================
+                    QUICK ACTIONS
+===================================================== */
+
+.assistant-actions{
+
+    display:grid;
+
+    grid-template-columns:1fr 1fr;
+
+    gap:12px;
+
+    margin-top:10px;
+
+}
+
+.assistant-action{
+
+    border:none;
+
+    border-radius:16px;
+
+    background:#f5f7fc;
+
+    padding:14px;
+
+    cursor:pointer;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:flex-start;
+
+    gap:10px;
+
+    transition:.25s;
+
+    color:#27324a;
+
+    font-size:13px;
+
+    font-weight:500;
+
+}
+
+.assistant-action i{
+
+    color:#4f8cff;
+
+    font-size:18px;
+
+    flex-shrink:0;
+
+}
+
+.assistant-action:hover{
+
+    transform:translateY(-3px);
+
+    background:#4f8cff;
+
+    color:#ffffff;
+
+    box-shadow:0 12px 25px rgba(79,140,255,.25);
+
+}
+
+.assistant-action:hover i{
+
+    color:#ffffff;
+
+}
+
+/* =====================================================
+                    TYPING
+===================================================== */
+
+.typing{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:6px;
+
+}
+
+.typing span{
+
+    width:7px;
+
+    height:7px;
+
+    border-radius:50%;
+
+    background:#4f8cff;
+
+    animation:typingBounce .8s infinite;
+
+}
+
+.typing span:nth-child(2){
+
+    animation-delay:.15s;
+
+}
+
+.typing span:nth-child(3){
+
+    animation-delay:.3s;
+
+}
+
+@keyframes typingBounce{
+
+    0%,100%{
+
+        transform:translateY(0);
+
+        opacity:.35;
+
+    }
+
+    50%{
+
+        transform:translateY(-4px);
+
+        opacity:1;
+
+    }
+
+}
+/* =====================================================
+                    INPUT
+===================================================== */
+
+.assistant-input{
+
+    height:78px;
+
+    padding:14px;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    border-top:1px solid rgba(0,0,0,.08);
+
+    background:rgba(255,255,255,.65);
+
+}
+
+.assistant-input input{
+
+    flex:1;
+
+    height:48px;
+
+    border:none;
+
+    outline:none;
+
+    border-radius:18px;
+
+    padding:0 18px;
+
+    background:#f4f6fb;
+
+    font-size:14px;
+
+    color:#27324a;
+
+    transition:.25s;
+
+}
+
+.assistant-input input:focus{
+
+    background:#ffffff;
+
+    box-shadow:0 0 0 2px rgba(79,140,255,.15);
+
+}
+
+.assistant-input button{
+
+    width:48px;
+
+    height:48px;
+
+    border:none;
+
+    border-radius:18px;
+
+    background:#4f8cff;
+
+    color:#ffffff;
+
+    cursor:pointer;
+
+    font-size:18px;
+
+    transition:.25s;
+
+}
+
+.assistant-input button:hover{
+
+    transform:scale(1.06);
+
+}
+
+/* =====================================================
+                FLOATING GREETING
+===================================================== */
+
+.assistant-greeting{
+
+    position:absolute;
+
+    right:0;
+
+    bottom:92px;
+
+    background:#ffffff;
+
+    color:#27324a;
+
+    padding:12px 18px;
+
+    border-radius:18px;
+
+    box-shadow:0 15px 35px rgba(0,0,0,.12);
+
+    font-size:13px;
+
+    max-width:220px;
+
+    opacity:0;
+
+    pointer-events:none;
+
+    transform:translateY(10px);
+
+    transition:.35s;
+
+    animation:greetingFloat 5s ease-in-out infinite;
+
+}
+
+.assistant-greeting.show{
+
+    opacity:1;
+
+    transform:translateY(0);
+
+}
+
+.assistant-greeting::after{
+
+    content:"";
+
+    position:absolute;
+
+    right:25px;
+
+    bottom:-8px;
+
+    width:14px;
+
+    height:14px;
+
+    background:#ffffff;
+
+    transform:rotate(45deg);
+
+}
+
+@keyframes greetingFloat{
+
+    0%,100%{
+
+        transform:translateY(0);
+
+    }
+
+    50%{
+
+        transform:translateY(-4px);
+
+    }
+
+}
+
+/* =====================================================
+                    DARK MODE
+===================================================== */
+
+.dark-mode .assistant-window{
+
+    background:rgba(25,32,45,.95);
+
+}
+
+.dark-mode .assistant-header{
+
+    border-bottom:1px solid rgba(255,255,255,.08);
+
+}
+
+.dark-mode .assistant-title h3,
+
+.dark-mode .assistant-title span{
+
+    color:#ffffff;
+
+}
+
+.dark-mode .assistant-message.bot{
+
+    background:#202938;
+
+    color:#f2f2f2;
+
+}
+
+.dark-mode .assistant-action{
+
+    background:#202938;
+
+    color:#ffffff;
+
+}
+
+.dark-mode .assistant-action:hover{
+
+    background:#4f8cff;
+
+}
+
+.dark-mode .assistant-input{
+
+    background:rgba(25,32,45,.95);
+
+}
+
+.dark-mode .assistant-input input{
+
+    background:#202938;
+
+    color:#ffffff;
+
+}
+
+.dark-mode .assistant-greeting{
+
+    background:#202938;
+
+    color:#ffffff;
+
+}
+
+.dark-mode .assistant-greeting::after{
+
+    background:#202938;
+
+}
+
+/* =====================================================
+                    RTL
+===================================================== */
+
+html[dir="rtl"] .assistant-widget{
+
+    right:30px;
+
+    left:auto;
+
+}
+
+html[dir="rtl"] .assistant-window{
+
+    direction:rtl;
+
+}
+
+html[dir="rtl"] .assistant-header{
+
+    direction:rtl;
+
+}
+
+html[dir="rtl"] .assistant-title{
+
+    flex-direction:row-reverse;
+
+}
+
+html[dir="rtl"] .assistant-body{
+
+    direction:rtl;
+
+}
+
+html[dir="rtl"] .assistant-message.bot{
+
+    align-self:flex-end;
+
+    border-radius:20px 20px 6px 20px;
+
+}
+
+html[dir="rtl"] .assistant-message.user{
+
+    align-self:flex-start;
+
+    border-radius:20px 20px 20px 6px;
+
+}
+
+html[dir="rtl"] .assistant-input{
+
+    direction:rtl;
+
+}
+
+html[dir="rtl"] .assistant-action{
+
+    flex-direction:row-reverse;
+
+}
+
+html[dir="rtl"] .assistant-greeting{
+
+    right:auto;
+
+    left:0;
+
+}
+
+html[dir="rtl"] .assistant-greeting::after{
+
+    right:auto;
+
+    left:25px;
+
+}
+
+/* =====================================================
+                    MOBILE
+===================================================== */
+
+@media(max-width:600px){
+
+.assistant-widget{
+
+    right:20px;
+
+    bottom:20px;
+
+}
+
+.assistant-window{
+
+    width:calc(100vw - 40px);
+
+    height:560px;
+
+    right:0;
+
+}
+
+.assistant-greeting{
+
+    max-width:180px;
+
+    font-size:12px;
+
+}
+
+.assistant-toggle{
+
+    width:66px;
+
+    height:66px;
+
+}
+
+}
+/* ==========================================
+        FLOATING GREETING
+========================================== */
+
+.assistant-greeting{
+
+    position:absolute;
+
+    right:0;
+
+    bottom:95px;
+
+    background:white;
+
+    color:#27324a;
+
+    padding:12px 18px;
+
+    border-radius:18px;
+
+    box-shadow:0 12px 30px rgba(0,0,0,.12);
+
+    white-space:nowrap;
+
+    opacity:0;
+
+    transform:translateY(10px);
+
+    pointer-events:none;
+
+    transition:.35s;
+
+}
+
+.assistant-greeting.show{
+
+    opacity:1;
+
+    transform:translateY(0);
+
+}
+
+.assistant-greeting::after{
+
+    content:"";
+
+    position:absolute;
+
+    right:24px;
+
+    bottom:-8px;
+
+    border:8px solid transparent;
+
+    border-top-color:white;
+
+}
+
+/* RTL */
+
+html[dir="rtl"] .assistant-greeting{
+
+    right:0;
+
+    left:auto;
+
+}
+
+/* DARK MODE */
+
+.dark-mode .assistant-greeting{
+
+    background:#202938;
+
+    color:white;
+
+}
+
+.dark-mode .assistant-greeting::after{
+
+    border-top-color:#202938;
+
+}
+/* ==============================
+   Floating Greeting
+============================== */
+
+.assistant-greeting{
+
+    position:absolute;
+
+    right:10px;
+
+    bottom:95px;
+
+    background:#ffffff;
+
+    color:#333;
+
+    padding:12px 18px;
+
+    border-radius:18px;
+
+    box-shadow:0 12px 35px rgba(0,0,0,.12);
+
+    max-width:240px;
+
+    opacity:0;
+
+    transform:translateY(15px);
+
+    pointer-events:none;
+
+    transition:.9s;
+
+    z-index:999;
+
+}
+
+
+.assistant-greeting::after{
+
+    content:"";
+
+    position:absolute;
+
+    right:28px;
+
+    bottom:-11px;
+
+    width:0;
+
+    height:0;
+
+    border-left:10px solid transparent;
+
+    border-right:10px solid transparent;
+
+    border-top:10px solid #ffffff;
+
+}
+
+
+.assistant-greeting.show{
+
+    opacity:1;
+
+    transform:translateY(0);
+
+}
+
+
+.assistant-greeting p{
+
+    margin:0;
+
+    font-size:14px;
+
+    line-height:1.6;
+
+}
+
+
+html[dir="rtl"] .assistant-greeting{
+
+    direction:rtl;
+
+    text-align:right;
+
+}
+
+
+html[dir="ltr"] .assistant-greeting{
+
+    direction:ltr;
+
+    text-align:left;
+
+}
+.hero.show ~ .assistant-widget{
+
+    opacity:1;
+
+    pointer-events:auto;
+
+}

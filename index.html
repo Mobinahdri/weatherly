@@ -1,167 +1,527 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
 
     <title>Weatherly</title>
 
-   <link rel="stylesheet" href="style.css">
+    <!-- Fonts -->
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Vazirmatn:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Styles -->
+
+    <link rel="stylesheet" href="style.css">
+
+    <link rel="stylesheet" href="assistant/assistant.css">
 
     <!-- Font Awesome -->
-    <link rel="stylesheet"
+
+    <link
+        rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
 </head>
 
 <body>
-    <div class="welcome-screen" id="welcome-screen">
-    <div class="welcome-card">
-        <div class="welcome-icon">
-          <i class="fa-solid fa-cloud-sun"></i>
-       </div>
 
-        <h2>Welcome to</h2>
+<!-- ==========================================
+                WELCOME SCREEN
+========================================== -->
+
+<div
+    class="welcome-screen"
+    id="welcome-screen">
+
+    <div class="welcome-card">
+
+        <div class="welcome-icon">
+
+            <i class="fa-solid fa-cloud-sun"></i>
+
+        </div>
+
+        <h2 data-i18n="welcomeTo"></h2>
+
         <h1>Weatherly</h1>
-        <p>
-           Search any city and explore real-time weather instantly.
-        </p>
+
+        <p data-i18n="welcomeDescription"></p>
 
         <div class="welcome-search">
+
             <input
-                type="text"
                 id="welcome-input"
-                placeholder="Search for a city..."
-            >
-            <button id="welcome-btn">
+                type="text"
+                data-placeholder="searchPlaceholder"
+                autocomplete="off">
+
+            <button
+                id="welcome-btn"
+                aria-label="Search">
+
                 <i class="fa-solid fa-magnifying-glass"></i>
+
             </button>
+
         </div>
+
     </div>
+
 </div>
 
-    <div class="main-container home-page">
+<!-- ==========================================
+                HOME PAGE
+========================================== -->
 
-    <!-- Navbar -->
+<div class="main-container home-page">
+
+    <!-- ======================================
+                    NAVBAR
+    ======================================= -->
+
     <nav class="navbar">
 
         <div class="logo">
+
             <i class="fa-solid fa-cloud-sun"></i>
-            Weatherly
+
+            <span>Weatherly</span>
+
         </div>
 
         <ul class="nav-links">
+
             <li>
-                <a class="active" href="index.html">Home</a>
+                <a
+                    class="active"
+                    href="index.html"
+                    data-i18n="home">
+                </a>
             </li>
 
             <li>
-                <a href="forecast.html">Forecast</a>
+                <a
+                    href="forecast.html"
+                    data-i18n="forecast">
+                </a>
             </li>
 
             <li>
-                <a href="details.html">Details</a>
+                <a
+                    href="details.html"
+                    data-i18n="details">
+                </a>
             </li>
 
             <li>
-                <a href="favorites.html">Favorites</a>
+                <a
+                    href="favorites.html"
+                    data-i18n="favorites">
+                </a>
             </li>
 
             <li>
-                <a href="about.html">About</a>
+                <a
+                    href="about.html"
+                    data-i18n="about">
+                </a>
             </li>
 
         </ul>
 
-       <button class="dark-mode-btn">
-            <i class="fa-solid fa-moon"></i>
-       </button>
-        
+        <div class="nav-actions">
+
+            <button
+                id="language-btn"
+                class="language-btn">
+
+                <i class="fa-solid fa-globe"></i>
+
+                <span>EN</span>
+
+            </button>
+
+            <button
+                class="dark-mode-btn"
+                aria-label="Dark Mode">
+
+                <i class="fa-solid fa-moon"></i>
+
+            </button>
+
+        </div>
+
     </nav>
 
-    <section class="hero" id="hero">
+    <!-- Hero starts here -->
+
+    <section
+        class="hero"id="hero">
+        <!-- ======================================
+                SEARCH BOX
+    ======================================= -->
 
     <div class="search-box">
 
-        <input id="search-input" type="text" placeholder="Search for a city...">
+        <input
+            id="search-input"
+            type="text"
+            data-placeholder="searchPlaceholder"
+            autocomplete="off">
 
-        <button id="search-btn">
-           <i class="fa-solid fa-magnifying-glass"></i>
+        <button
+            id="search-btn"
+            aria-label="Search">
+
+            <i class="fa-solid fa-magnifying-glass"></i>
+
         </button>
+
     </div>
 
+    <!-- ======================================
+                CURRENT WEATHER
+    ======================================= -->
+
     <div class="weather-info">
-      <div class="city-row">
-        <h1 id="city-name">city</h1>
-         <button id="favorite-btn">
 
-            <i class="fa-regular fa-star"></i>
+        <div class="city-row">
 
-        </button>
- 
-      </div>
-      
-        <div class="temperature">
+            <h1 id="city-name">City</h1>
 
-            <img id="weather-icon" src="https://cdn.weatherapi.com/weather/64x64/day/113.png" alt="weather icon">
+            <button
+                id="favorite-btn"
+                aria-label="Favorite">
 
-            <span id="temperature">20°C</span>
+                <i class="fa-regular fa-star"></i>
+
+            </button>
 
         </div>
 
-        <p id="weather-status">Clear</p>
+        <div class="temperature">
+
+            <img
+                id="weather-icon"
+                src="https://cdn.weatherapi.com/weather/64x64/day/113.png"
+                alt="Weather Icon">
+
+            <span id="temperature">
+                20°C
+            </span>
+
+        </div>
+
+        <p id="weather-status">
+            Clear
+        </p>
+
     </div>
+
+    <!-- ======================================
+                    DATE & TIME
+    ======================================= -->
 
     <div class="time-card">
 
-      <h2 id="city-time">08:30 AM</h2>
+        <h2 id="city-time">
+            08:30 AM
+        </h2>
 
-      <span id="city-date">Wednesday 1 December 2021</span>
+        <span id="city-date">
+            Wednesday 1 December 2021
+        </span>
+
     </div>
+
+    <!-- ======================================
+                WEATHER DETAILS
+    ======================================= -->
 
     <div class="weather-details">
 
-    <div class="detail-card">
-        <i class="fa-solid fa-droplet"></i>
+        <div class="detail-card">
 
-        <div>
-            <span>Humidity</span>
-            <h3 id="humidity">65%</h3>
+            <i class="fa-solid fa-droplet"></i>
+
+            <div>
+
+                <span data-i18n="humidity"></span>
+
+                <h3 id="humidity">
+                    65%
+                </h3>
+
+            </div>
+
         </div>
+
+        <div class="detail-card">
+
+            <i class="fa-solid fa-wind"></i>
+
+            <div>
+
+                <span data-i18n="wind"></span>
+
+                <h3 id="wind">
+                    12 km/h
+                </h3>
+
+            </div>
+
+        </div>
+
+        <div class="detail-card">
+
+            <i class="fa-solid fa-gauge-high"></i>
+
+            <div>
+
+                <span data-i18n="pressure"></span>
+
+                <h3 id="pressure">
+                    1012 hPa
+                </h3>
+
+            </div>
+
+        </div>
+
+        <div class="detail-card">
+
+            <i class="fa-solid fa-eye"></i>
+
+            <div>
+
+                <span data-i18n="visibility"></span>
+
+                <h3 id="visibility">
+                    10 km
+                </h3>
+
+            </div>
+
+        </div>
+
     </div>
 
-    <div class="detail-card">
-        <i class="fa-solid fa-wind"></i>
-
-        <div>
-            <span>Wind</span>
-            <h3 id="wind">12 km/h</h3>
-        </div>
-    </div>
-
-    <div class="detail-card">
-        <i class="fa-solid fa-gauge-high"></i>
-
-        <div>
-            <span>Pressure</span>
-            <h3 id="pressure">1012 hPa</h3>
-        </div>
-    </div>
-
-    <div class="detail-card">
-        <i class="fa-solid fa-eye"></i>
-
-        <div>
-            <span>Visibility</span>
-            <h3 id="visibility">10 km</h3>
-        </div>
-    </div>
-</div>
 </section>
-</div>
-<script src="favoritesManager.js"></script>
-<script src="app.js"></script>
-</body>
+<!-- ==========================================
+            WEATHERLY AI ASSISTANT
+========================================== -->
 
+<div class="assistant-widget" id="assistant-widget">
+
+    <!-- Floating Greeting -->
+
+    <div
+        class="assistant-greeting"
+        id="assistant-greeting">
+
+        <p
+            id="assistant-greeting-text"
+            data-i18n="assistantGreeting">
+        </p>
+
+    </div>
+
+    <!-- Floating Button -->
+
+    <button
+        class="assistant-toggle"
+        id="assistant-toggle">
+
+        <i class="fa-solid fa-cloud-sun"></i>
+
+        <span data-i18n="assistantButton">
+            Weather AI
+        </span>
+
+    </button>
+
+    <!-- Chat Window -->
+
+    <div
+        class="assistant-window"
+        id="assistant-window">
+
+        <!-- Header -->
+
+        <div class="assistant-header">
+
+            <div class="assistant-title">
+
+                <i class="fa-solid fa-cloud-sun"></i>
+
+                <div>
+
+                    <h3
+                        id="assistant-title"
+                        data-i18n="assistantTitle">
+                    </h3>
+
+                    <span id="assistant-city">
+                    </span>
+
+                </div>
+
+            </div>
+
+            <button
+                class="assistant-close"
+                id="assistant-close">
+
+                <i class="fa-solid fa-xmark"></i>
+
+            </button>
+
+        </div>
+
+        <!-- Messages -->
+
+        <div
+            class="assistant-body"
+            id="assistant-body">
+
+            <!-- Welcome -->
+
+            <div class="assistant-message bot">
+
+                <p
+                    id="assistant-welcome"
+                    data-i18n="assistantWelcome">
+                </p>
+
+            </div>
+
+            <!-- Quick Actions -->
+
+            <div
+                class="assistant-actions"
+                id="assistant-actions">
+
+                <button
+                    class="assistant-action"
+                    data-question="travel">
+
+                    <i class="fa-solid fa-plane"></i>
+
+                    <span
+                        class="assistant-action-text"
+                        data-i18n="travelPlan">
+                    </span>
+
+                </button>
+
+                <button
+                    class="assistant-action"
+                    data-question="clothing">
+
+                    <i class="fa-solid fa-shirt"></i>
+
+                    <span
+                        class="assistant-action-text"
+                        data-i18n="clothingAdvice">
+                    </span>
+
+                </button>
+
+                <button
+                    class="assistant-action"
+                    data-question="outdoor">
+
+                    <i class="fa-solid fa-person-hiking"></i>
+
+                    <span
+                        class="assistant-action-text"
+                        data-i18n="outdoorActivity">
+                    </span>
+
+                </button>
+
+                <button
+                    class="assistant-action"
+                    data-question="health">
+
+                    <i class="fa-solid fa-heart-pulse"></i>
+
+                    <span
+                        class="assistant-action-text"
+                        data-i18n="weatherSafety">
+                    </span>
+
+                </button>
+
+            </div>
+
+        </div>
+
+        <!-- Input -->
+
+        <div class="assistant-input">
+
+            <input
+
+                id="assistant-input"
+
+                type="text"
+
+                data-placeholder="assistantPlaceholder"
+
+                autocomplete="off">
+
+            <button id="assistant-send">
+
+                <i class="fa-solid fa-paper-plane"></i>
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+</div>
+<!-- End Main Container -->
+
+<!-- ==========================================
+                JAVASCRIPT
+========================================== -->
+<div id="assistant-root"></div> 
+<script src="favoritesManager.js"></script>
+
+<!-- Locales -->
+
+<script src="locales/en.js"></script>
+<script src="locales/fa.js"></script>
+
+<!-- Language -->
+
+<script src="i18n.js"></script>
+
+<!-- Main App -->
+
+<script src="app.js"></script>
+
+<!-- Weather AI -->
+
+<script src="assistant/assistant.js"></script>
+
+</body>
 </html>

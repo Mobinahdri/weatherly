@@ -1,6 +1,8 @@
 const API_URL = "http://localhost:3000/api/weather";
 
-/* ELEMENTS */
+/* ==========================================
+                ELEMENTS
+========================================== */
 
 const welcomeScreen = document.getElementById("welcome-screen");
 const welcomeBtn = document.getElementById("welcome-btn");
@@ -29,8 +31,59 @@ const darkBtn = document.querySelector(".dark-mode-btn");
 const favoriteBtn = document.getElementById("favorite-btn");
 
 let currentCity = "";
+let currentWeatherData = null;
 
-/*  PAGE LOAD */
+/* ==========================================
+            WEATHER TRANSLATIONS
+========================================== */
+
+const weatherConditions = {
+  Clear: "صاف",
+
+  Sunny: "آفتابی",
+
+  "Partially cloudy": "نیمه ابری",
+
+  Cloudy: "ابری",
+
+  Overcast: "کاملاً ابری",
+
+  Rain: "بارانی",
+
+  "Light Rain": "باران ملایم",
+
+  "Heavy Rain": "باران شدید",
+
+  Snow: "برفی",
+
+  Fog: "مه",
+
+  Mist: "مه رقیق",
+
+  Thunderstorm: "رعد و برق",
+
+  Windy: "باد شدید",
+};
+
+/* ==========================================
+            HELPERS
+========================================== */
+
+function getLocale() {
+  return currentLanguage === "fa" ? "fa-IR" : "en-US";
+}
+
+function translateCondition(condition) {
+  if (currentLanguage === "en") {
+    return condition;
+  }
+
+  return weatherConditions[condition] || condition;
+}
+
+/* ==========================================
+                PAGE LOAD
+========================================== */
 
 window.addEventListener("DOMContentLoaded", () => {
   loadTheme();
@@ -38,12 +91,13 @@ window.addEventListener("DOMContentLoaded", () => {
   initializeHome();
 });
 
-/*  INITIALIZE */
+/* ==========================================
+            INITIALIZE HOME
+========================================== */
 
 function initializeHome() {
   const savedCity = localStorage.getItem("selectedCity");
 
-  // فقط اگر Refresh شده باشد
   const navigation = performance.getEntriesByType("navigation")[0];
 
   const isReload = navigation && navigation.type === "reload";
@@ -59,17 +113,27 @@ function initializeHome() {
 
     hero.classList.add("show");
 
+    document.querySelector(".main-container")?.classList.add("show-assistant");
+
+    document.dispatchEvent(new CustomEvent("homeEntered"));
+
     getWeather(savedCity);
   }
 }
 
-/* EVENTS */
+/* ==========================================
+                EVENTS
+========================================== */
 
 welcomeBtn.addEventListener("click", () => {
   const city = welcomeInput.value.trim();
 
   if (!city) {
-    alert("Please enter a city.");
+    alert(
+      currentLanguage === "fa"
+        ? "نام شهر را وارد کنید."
+        : "Please enter a city.",
+    );
 
     return;
   }
@@ -84,9 +148,7 @@ welcomeBtn.addEventListener("click", () => {
 });
 
 searchBtn.addEventListener("click", () => {
-  const city = searchInput.value.trim();
-
-  getWeather(city);
+  getWeather(searchInput.value.trim());
 });
 
 searchInput.addEventListener("keypress", (e) => {
@@ -100,53 +162,94 @@ welcomeInput.addEventListener("keypress", (e) => {
     welcomeBtn.click();
   }
 });
+/* ==========================================
+                GET WEATHER
+========================================== */
 
-/* WEATHER */
+async function getWeather(city){
 
-async function getWeather(city) {
-  if (!city) return;
+    if(!city) return;
 
-  try {
-    const response = await fetch(`${API_URL}?city=${encodeURIComponent(city)}`);
+    try{
 
-    const result = await response.json();
+        const response = await fetch(
 
-    if (!result.success) {
-      throw new Error(result.message || "City not found");
+            `${API_URL}?city=${encodeURIComponent(city)}`
+
+        );
+
+        const result = await response.json();
+
+        if(!result.success){
+
+            throw new Error(
+
+                currentLanguage==="fa"
+
+                ?
+
+                "شهر پیدا نشد."
+
+                :
+
+                (result.message || "City not found")
+
+            );
+
+        }
+
+        const data = result.data;
+
+        currentWeatherData = data;
+
+        currentCity = data.city;
+
+        localStorage.setItem(
+
+            "selectedCity",
+
+            currentCity
+
+        );
+
+        updateWeatherUI(data);
+
+        updateFavoriteButton();
+
+        welcomeScreen.classList.add("hide");
+
+        hero.classList.add("show");
+
+        document.querySelector(".main-container")
+          ?.classList.add("show-assistant");
+
+        document.dispatchEvent(new CustomEvent("homeEntered"));
+
     }
 
-    const data = result.data;
+    catch(error){
 
-    currentCity = data.city;
+        alert(error.message);
 
-    localStorage.setItem(
-      "selectedCity",
+    }
 
-      currentCity,
-    );
-
-    updateWeatherUI(data);
-
-    updateFavoriteButton();
-
-    welcomeScreen.classList.add("hide");
-
-    hero.classList.add("show");
-  } catch (err) {
-    alert(err.message);
-  }
 }
-/*  UPDATE UI */
 
-function updateWeatherUI(data) {
+/* ==========================================
+            UPDATE WEATHER UI
+========================================== */
 
-  cityName.textContent = data.fullName;
+function updateWeatherUI(data){
+
+    cityName.textContent = data.fullName;
 
     temperature.textContent =
         `${Math.round(data.current.temperature)}°C`;
 
     weatherStatus.textContent =
-        data.current.condition;
+        translateCondition(
+            data.current.condition
+        );
 
     weatherIcon.src =
         data.current.icon;
@@ -169,80 +272,154 @@ function updateWeatherUI(data) {
     const now = new Date();
 
     cityDate.textContent =
-        now.toLocaleDateString("en-US", {
+        now.toLocaleDateString(
 
-            weekday: "long",
+            getLocale(),
 
-            month: "long",
+            {
 
-            day: "numeric",
+                weekday:"long",
 
-            year: "numeric"
+                month:"long",
 
-        });
+                day:"numeric",
+
+                year:"numeric"
+
+            }
+
+        );
 
     cityTime.textContent =
-        now.toLocaleTimeString("en-US", {
+        now.toLocaleTimeString(
 
-            hour: "2-digit",
+            getLocale(),
 
-            minute: "2-digit",
+            {
 
-            hour12: true
+                hour:"2-digit",
 
-        });
+                minute:"2-digit",
+
+                hour12:
+                    currentLanguage==="en"
+
+            }
+
+        );
 
 }
 
-/* FAVORITE BUTTON */
+/* ==========================================
+        LANGUAGE REFRESH SUPPORT
+========================================== */
 
-function updateFavoriteButton() {
+document.addEventListener(
 
-    if (!favoriteBtn) return;
+    "languageChanged",
+
+    ()=>{
+
+        if(currentWeatherData){
+
+            updateWeatherUI(
+
+                currentWeatherData
+
+            );
+
+        }
+
+    }
+
+);
+/* ==========================================
+            FAVORITE BUTTON
+========================================== */
+
+function updateFavoriteButton(){
+
+    if(!favoriteBtn) return;
 
     const icon =
         favoriteBtn.querySelector("i");
 
-    if (isFavorite(currentCity)) {
+    if(isFavorite(currentCity)){
 
         favoriteBtn.classList.add("active");
 
         icon.className =
             "fa-solid fa-star";
 
+        favoriteBtn.title =
+            currentLanguage === "fa"
+
+            ?
+
+            "حذف از علاقه‌مندی‌ها"
+
+            :
+
+            "Remove from Favorites";
+
     }
 
-    else {
+    else{
 
         favoriteBtn.classList.remove("active");
 
         icon.className =
             "fa-regular fa-star";
 
+        favoriteBtn.title =
+            currentLanguage === "fa"
+
+            ?
+
+            "افزودن به علاقه‌مندی‌ها"
+
+            :
+
+            "Add to Favorites";
+
     }
 
 }
 
-/* FAVORITE CLICK */
+/* ==========================================
+            FAVORITE CLICK
+========================================== */
 
-favoriteBtn.addEventListener("click", () => {
+if(favoriteBtn){
 
-    if (!currentCity) return;
+    favoriteBtn.addEventListener(
 
-    toggleFavorite(currentCity);
+        "click",
 
-    updateFavoriteButton();
+        ()=>{
 
-});
+            if(!currentCity) return;
 
-/*  DARK MODE */
+            toggleFavorite(currentCity);
 
-function loadTheme() {
+            updateFavoriteButton();
+
+        }
+
+    );
+
+}
+
+/* ==========================================
+                DARK MODE
+========================================== */
+
+function loadTheme(){
 
     const theme =
         localStorage.getItem("theme");
 
-    if (theme === "dark") {
+    if(theme==="dark"){
 
         document.body.classList.add("dark-mode");
 
@@ -250,34 +427,85 @@ function loadTheme() {
 
 }
 
-darkBtn.addEventListener("click", () => {
+if(darkBtn){
 
-    document.body.classList.toggle("dark-mode");
+    darkBtn.addEventListener(
 
-    localStorage.setItem(
+        "click",
 
-        "theme",
+        ()=>{
 
-        document.body.classList.contains("dark-mode")
+            document.body.classList.toggle(
 
-            ? "dark"
+                "dark-mode"
 
-            : "light"
+            );
+
+            localStorage.setItem(
+
+                "theme",
+
+                document.body.classList.contains("dark-mode")
+
+                    ?
+
+                    "dark"
+
+                    :
+
+                    "light"
+
+            );
+
+        }
 
     );
 
-});
+}
 
-/*  STAR SYNC */
+/* ==========================================
+            WINDOW FOCUS
+========================================== */
 
-window.addEventListener("focus", () => {
+window.addEventListener(
 
-    if (currentCity) {
+    "focus",
+
+    ()=>{
+
+        if(currentCity){
+
+            updateFavoriteButton();
+
+        }
+
+    }
+
+);
+
+/* ==========================================
+        LANGUAGE UPDATE SUPPORT
+========================================== */
+
+document.addEventListener(
+
+    "languageChanged",
+
+    ()=>{
+
+        if(currentWeatherData){
+
+            updateWeatherUI(
+
+                currentWeatherData
+
+            );
+
+        }
 
         updateFavoriteButton();
 
     }
 
-});
-
+);
 // getWeather("New York");

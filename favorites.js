@@ -1,19 +1,82 @@
 const API_URL = "http://localhost:3000/api/weather";
 
+/* ==========================================
+                ELEMENTS
+========================================== */
+
 const container = document.getElementById("favorites-container");
+
 const emptyState = document.getElementById("empty-state");
 
 const darkBtn = document.querySelector(".dark-mode-btn");
 
-/* PAGE LOAD */
+let favoriteWeatherData = [];
 
-window.addEventListener("DOMContentLoaded", () => {
-  loadTheme();
+/* ==========================================
+        WEATHER TRANSLATIONS
+========================================== */
 
-  loadFavorites();
-});
+const weatherConditions = {
+  Clear: "صاف",
 
-/* LOAD THEME */
+  Sunny: "آفتابی",
+
+  "Partially cloudy": "نیمه ابری",
+
+  Cloudy: "ابری",
+
+  Overcast: "کاملاً ابری",
+
+  Rain: "بارانی",
+
+  "Light Rain": "باران ملایم",
+
+  "Heavy Rain": "باران شدید",
+
+  Snow: "برفی",
+
+  Fog: "مه",
+
+  Mist: "مه رقیق",
+
+  Thunderstorm: "رعد و برق",
+
+  Windy: "باد شدید",
+};
+
+/* ==========================================
+                HELPERS
+========================================== */
+
+function translateCondition(condition) {
+  if (currentLanguage === "en") {
+    return condition;
+  }
+
+  return weatherConditions[condition] || condition;
+}
+
+function getLocale() {
+  return currentLanguage === "fa" ? "fa-IR" : "en-US";
+}
+
+/* ==========================================
+                PAGE LOAD
+========================================== */
+
+window.addEventListener(
+  "DOMContentLoaded",
+
+  () => {
+    loadTheme();
+
+    loadFavorites();
+  },
+);
+
+/* ==========================================
+                DARK MODE
+========================================== */
 
 function loadTheme() {
   const theme = localStorage.getItem("theme");
@@ -23,10 +86,30 @@ function loadTheme() {
   }
 }
 
-/* LOAD FAVORITES */
+if (darkBtn) {
+  darkBtn.addEventListener(
+    "click",
+
+    () => {
+      document.body.classList.toggle("dark-mode");
+
+      localStorage.setItem(
+        "theme",
+
+        document.body.classList.contains("dark-mode") ? "dark" : "light",
+      );
+    },
+  );
+}
+
+/* ==========================================
+            LOAD FAVORITES
+========================================== */
 
 async function loadFavorites() {
   container.innerHTML = "";
+
+  favoriteWeatherData = [];
 
   const favorites = getFavorites();
 
@@ -47,84 +130,154 @@ async function loadFavorites() {
       const result = await response.json();
 
       if (result.success) {
+        favoriteWeatherData.push(result.data);
+
         createCard(result.data);
       }
-    } catch (err) {
-      console.log(err);
+    } catch (error) {
+      console.error(error);
     }
   }
+  updateEmptyState();
 }
-/* CREATE CARD */
+/* ==========================================
+            CREATE CARD
+========================================== */
 
 function createCard(weather){
 
-    const card =
-        document.createElement("div");
+    const card = document.createElement("div");
 
-    card.className =
-        "favorite-card";
+    card.className = "favorite-card";
 
-    card.innerHTML=`
+    card.innerHTML = `
 
-        <i class="fa-solid fa-star remove-btn"></i>
+        <button
+            class="remove-btn"
+            title="${
+                currentLanguage==="fa"
+
+                ?
+
+                "حذف از علاقه‌مندی‌ها"
+
+                :
+
+                "Remove from Favorites"
+            }">
+
+            <i class="fa-solid fa-star"></i>
+
+        </button>
 
         <div class="favorite-city">
 
-            <h3>${weather.city}</h3>
+            <h3>
 
-            <p>${weather.country}</p>
+                ${weather.city}
+
+            </h3>
+
+            <p>
+
+                ${weather.country}
+
+            </p>
 
         </div>
 
         <div class="favorite-weather">
 
             <img
-                src="${weather.current.icon}"
-                alt="${weather.current.condition}">
 
-            <span>${Math.round(weather.current.temperature)}°C</span>
+                src="${weather.current.icon}"
+
+                alt="${translateCondition(weather.current.condition)}"
+
+            >
+
+            <div class="favorite-weather-info">
+
+                <span class="favorite-temp">
+
+                    ${Math.round(weather.current.temperature)}°C
+
+                </span>
+
+                <small class="favorite-condition">
+
+                    ${translateCondition(weather.current.condition)}
+
+                </small>
+
+            </div>
 
         </div>
 
     `;
 
-    /* -- Remove -- */
+    /* =====================
+            REMOVE
+    ====================== */
 
     const removeBtn =
+
         card.querySelector(".remove-btn");
 
-    removeBtn.addEventListener("click",(e)=>{
+    removeBtn.addEventListener(
 
-        e.stopPropagation();
+        "click",
 
-        removeCard(weather.city,card);
+        (e)=>{
 
-    });
+            e.stopPropagation();
 
-    /* -- Open Forecast -- */
+            removeCard(
 
-    card.addEventListener("click",()=>{
+                weather.city,
 
-        localStorage.setItem(
+                card
 
-            "selectedCity",
+            );
 
-            weather.city
+        }
 
-        );
+    );
 
-        window.location.href=
-            "forecast.html";
+    /* =====================
+        OPEN FORECAST
+    ====================== */
 
-    });
+    card.addEventListener(
+
+        "click",
+
+        ()=>{
+
+            localStorage.setItem(
+
+                "selectedCity",
+
+                weather.city
+
+            );
+
+            window.location.href =
+
+                "forecast.html";
+
+        }
+
+    );
 
     container.appendChild(card);
 
 }
+/* ==========================================
+            REMOVE CARD
+========================================== */
 
-/* REMOVE CARD */
-
-function removeCard(city,card){
+function removeCard(city, card){
 
     card.classList.add("removing");
 
@@ -138,34 +291,84 @@ function removeCard(city,card){
 
 }
 
-/*  DARK MODE */
+/* ==========================================
+            WINDOW FOCUS
+========================================== */
 
-darkBtn.addEventListener("click",()=>{
+window.addEventListener(
 
-    document.body.classList.toggle(
+    "focus",
 
-        "dark-mode"
+    ()=>{
 
-    );
+        loadFavorites();
 
-    localStorage.setItem(
+    }
 
-        "theme",
+);
 
-        document.body.classList.contains("dark-mode")
+/* ==========================================
+        LANGUAGE CHANGE SUPPORT
+========================================== */
 
-        ? "dark"
+document.addEventListener(
 
-        : "light"
+    "languageChanged",
 
-    );
+    ()=>{
 
-});
+        if(favoriteWeatherData.length===0){
 
-/* SYNC */
+            return;
 
-window.addEventListener("focus",()=>{
+        }
 
-    loadFavorites();
+        container.innerHTML="";
 
-});
+        favoriteWeatherData.forEach(weather=>{
+
+            createCard(weather);
+
+        });
+
+    }
+
+);
+
+/* ==========================================
+        EMPTY STATE UPDATE
+========================================== */
+
+function updateEmptyState(){
+
+    const favorites = getFavorites();
+
+    if(favorites.length===0){
+
+        emptyState.style.display="block";
+
+        container.style.display="none";
+
+    }
+
+    else{
+
+        emptyState.style.display="none";
+
+        container.style.display="grid";
+
+    }
+
+}
+
+document.addEventListener(
+
+    "languageChanged",
+
+    ()=>{
+
+        updateEmptyState();
+
+    }
+
+);

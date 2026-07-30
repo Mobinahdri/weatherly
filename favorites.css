@@ -216,6 +216,7 @@
 .favorite-card{
 
     animation:fadeUp .6s ease;
+    position:relative;
 }
 
 .favorite-card.removing{
@@ -359,5 +360,88 @@ body.dark-mode .empty-state p{
     transform:translateX(40px);
 
     transition:all .3s ease;
+
+}
+.favorite-weather-info{
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+    gap:4px;
+
+}
+
+.favorite-condition{
+
+    font-size:.82rem;
+
+    opacity:.7;
+
+}
+.remove-btn{
+
+    position:absolute;
+
+    top:14px;
+
+    right:14px;
+
+    width:34px;
+
+    height:34px;
+
+    border:none;
+
+    border-radius:50%;
+
+    background:rgba(255,255,255,.15);
+
+    backdrop-filter:blur(10px);
+
+    cursor:pointer;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    transition:.25s;
+
+    color:#f6c945;
+
+    font-size:18px;
+
+}
+
+.remove-btn:hover{
+
+    transform:scale(1.12);
+
+    background:#f6c945;
+
+    color:#fff;
+
+}
+/* English */
+
+html[dir="ltr"] .remove-btn{
+
+    right:14px;
+
+    left:auto;
+
+}
+
+/* Persian */
+
+html[dir="rtl"] .remove-btn{
+
+    left:14px;
+
+    right:auto;
 
 }

@@ -15,7 +15,14 @@ body{
     justify-content:center;
     align-items:flex-start;
 
+    font-family:Inter,sans-serif;
+
    /* padding:20px; */
+}
+html[lang="fa"] body{
+
+    font-family:"Vazirmatn",sans-serif;
+
 }
 
 .main-container{
@@ -650,5 +657,61 @@ body.dark-mode .detail-card h3{
     background:#efcf7e;
 
     color:white;
+
+}
+/* ==========================
+      Navbar Actions
+========================== */
+
+.nav-actions{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+}
+.language-btn{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    padding:10px 18px;
+
+    border:none;
+
+    border-radius:50px;
+
+    background:rgba(39, 41, 42, 0.18);
+
+    backdrop-filter:blur(12px);
+
+    -webkit-backdrop-filter:blur(12px);
+
+    color:var(--text-color);
+
+    font-weight:600;
+
+    font-size:15px;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+}
+.language-btn:hover{
+
+    transform:translateY(-2px);
+
+    background:rgba(255,255,255,.28);
+
+}
+.language-btn i{
+
+    font-size:16px;
 
 }

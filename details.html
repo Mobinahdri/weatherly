@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 
 <head>
 
@@ -9,6 +9,12 @@
           content="width=device-width, initial-scale=1.0">
 
     <title>Details | Weatherly</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Vazirmatn:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="details.css">
@@ -37,39 +43,47 @@
         <ul class="nav-links">
 
             <li>
-                <a href="index.html">Home</a>
+                <a href="index.html" data-i18n="home"></a>
             </li>
 
             <li>
-                <a href="forecast.html">Forecast</a>
+                <a href="forecast.html" data-i18n="forecast"></a>
             </li>
 
             <li>
                 <a class="active"
-                   href="details.html">
-                    Details
-                </a>
+                   href="details.html" data-i18n="details"></a>
             </li>
 
             <li>
-                <a href="favorites.html">
-                    Favorites
-                </a>
+                <a href="favorites.html" data-i18n="favorites"></a>
             </li>
 
             <li>
-                <a href="about.html">
-                    About
-                </a>
+                <a href="about.html" data-i18n="about"></a>
             </li>
 
         </ul>
+        <div class="nav-actions">
 
-        <button class="dark-mode-btn">
+           <button
+               id="language-btn"
+               class="language-btn">
 
-            <i class="fa-solid fa-moon"></i>
+              <i class="fa-solid fa-globe"></i>
+
+           <span>EN</span>
+  
+          </button>
+          <button
+           class="dark-mode-btn"
+           aria-label="Dark Mode">
+
+          <i class="fa-solid fa-moon"></i>
 
         </button>
+
+      </div>
 
     </nav>
 
@@ -77,17 +91,9 @@
 
     <section class="details-header">
 
-        <h1>
+        <h1 data-i18n="weatherDetails"></h1>
 
-            Weather Details
-
-        </h1>
-
-        <p id="details-city">
-
-            Loading...
-
-        </p>
+        <p id="details-city" data-i18n="loading"></p>
 
     </section>
 
@@ -101,7 +107,7 @@
 
             <i class="fa-solid fa-droplet"></i>
 
-            <h3>Humidity</h3>
+            <h3 data-i18n="humidity"></h3>
 
             <span id="humidity">--</span>
 
@@ -113,7 +119,7 @@
 
             <i class="fa-solid fa-wind"></i>
 
-            <h3>Wind</h3>
+            <h3 data-i18n="wind"></h3>
 
             <span id="wind">--</span>
 
@@ -125,7 +131,7 @@
 
             <i class="fa-solid fa-gauge-high"></i>
 
-            <h3>Pressure</h3>
+            <h3 data-i18n="pressure"></h3>
 
             <span id="pressure">--</span>
 
@@ -137,7 +143,7 @@
 
             <i class="fa-solid fa-eye"></i>
 
-            <h3>Visibility</h3>
+            <h3 data-i18n="visibility"></h3>
 
             <span id="visibility">--</span>
 
@@ -149,7 +155,7 @@
 
             <i class="fa-regular fa-sun"></i>
 
-            <h3>Sunrise</h3>
+            <h3 data-i18n="sunrise"></h3>
 
             <span id="sunrise">--</span>
 
@@ -161,7 +167,7 @@
 
             <i class="fa-solid fa-cloud-sun"></i>
 
-            <h3>Sunset</h3>
+            <h3 data-i18n="sunset"></h3>
 
             <span id="sunset">--</span>
 
@@ -170,7 +176,9 @@
     </section>
 
 </div>
-
+<script src="locales/en.js"></script>
+<script src="locales/fa.js"></script>
+<script src="i18n.js"></script>
 <script src="details.js"></script>
 
 </body>

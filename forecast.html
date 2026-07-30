@@ -10,6 +10,12 @@
 
     <title>Forecast | Weatherly</title>
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Vazirmatn:wght@400;500;600;700&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="forecast.css">
 
@@ -24,7 +30,7 @@
 
 <div class="main-container forecast-page">
 
-    <!-- === NAVBAR === -->
+    <!-- == NAVBAR == -->
 
     <nav class="navbar">
 
@@ -39,51 +45,49 @@
         <ul class="nav-links">
 
             <li>
-                <a href="index.html">
-                    Home
-                </a>
+                <a href="index.html" data-i18n="home"></a>
             </li>
 
             <li>
                 <a class="active"
-                   href="forecast.html">
-
-                    Forecast
-
-                </a>
+                   href="forecast.html" data-i18n="forecast"></a>
             </li>
 
             <li>
-                <a href="details.html">
-
-                    Details
-
-                </a>
+                <a href="details.html" data-i18n="details"></a>
             </li>
 
             <li>
-                <a href="favorites.html">
-
-                    Favorites
-
-                </a>
+                <a href="favorites.html" data-i18n="favorites"> </a>
             </li>
 
             <li>
-                <a href="about.html">
-
-                    About
-
+                <a href="about.html" data-i18n="about">
                 </a>
             </li>
 
         </ul>
 
-        <button class="dark-mode-btn">
+         <div class="nav-actions">
 
-            <i class="fa-solid fa-moon"></i>
+           <button
+               id="language-btn"
+               class="language-btn">
 
-        </button>
+            <i class="fa-solid fa-globe"></i>
+
+           <span>EN</span>
+  
+           </button>
+           <button
+           class="dark-mode-btn"
+           aria-label="Dark Mode"> 
+
+          <i class="fa-solid fa-moon"></i>
+
+          </button>
+
+         </div>
 
     </nav>
 
@@ -91,17 +95,9 @@
 
     <section class="forecast-header">
 
-        <h1>
+        <h1 data-i18n="forecastTitle"> </h1>
 
-            5 Days Forecast
-
-        </h1>
-
-        <p id="forecast-city">
-
-            Loading...
-
-        </p>
+        <p id="forecast-city" data-i18n="loading"></p>
 
     </section>
 
@@ -117,11 +113,7 @@
 
     <section class="chart-card">
 
-        <h2>
-
-            Temperature Chart
-
-        </h2>
+        <h2 data-i18n="temperatureChart"></h2>
 
         <div class="chart-wrapper">
 
@@ -132,7 +124,9 @@
     </section>
 
 </div>
-
+<script src="locales/en.js"></script>
+<script src="locales/fa.js"></script>
+<script src="i18n.js"></script>
 <script src="forecast.js"></script>
 </body>
 </html>

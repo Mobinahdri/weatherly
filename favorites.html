@@ -10,6 +10,12 @@
 
     <title>Favorites | Weatherly</title>
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Vazirmatn:wght@400;500;600;700&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="favorites.css">
 
@@ -37,37 +43,47 @@
         <ul class="nav-links">
 
             <li>
-                <a href="index.html">Home</a>
+                <a href="index.html" data-i18n="home"></a>
             </li>
 
             <li>
-                <a href="forecast.html">Forecast</a>
+                <a href="forecast.html" data-i18n="forecast"></a>
             </li>
 
             <li>
-                <a href="details.html">Details</a>
+                <a href="details.html" data-i18n="details"></a>
             </li>
 
             <li>
                 <a class="active"
-                   href="favorites.html">
-                    Favorites
-                </a>
+                   href="favorites.html" data-i18n="favorites"></a>
             </li>
 
             <li>
-                <a href="about.html">
-                    About
-                </a>
+                <a href="about.html" data-i18n="about"></a>
             </li>
 
         </ul>
+        <div class="nav-actions">
 
-        <button class="dark-mode-btn">
+           <button
+               id="language-btn"
+               class="language-btn">
 
-            <i class="fa-solid fa-moon"></i>
+            <i class="fa-solid fa-globe"></i>
 
-        </button>
+           <span>EN</span>
+  
+           </button>
+           <button
+            class="dark-mode-btn"
+            aria-label="Dark Mode">
+
+              <i class="fa-solid fa-moon"></i>
+ 
+           </button>
+
+      </div>
 
     </nav>
 
@@ -76,9 +92,7 @@
     <section class="favorites-header">
 
         <h1>
-
-            ⭐ My Favorite Cities
-
+            ⭐ <span data-i18n="favoriteCities"></span>
         </h1>
 
     </section>
@@ -99,22 +113,18 @@
 
         <i class="fa-solid fa-star"></i>
 
-        <h2>
+        <h2 data-i18n="noFavoritesTitle"></h2>
 
-            No Favorite Cities
-
-        </h2>
-
-        <p>
-
-            Search a city and add it to your favorites.
-
-        </p>
+        <p data-i18n="noFavoritesDescription"></p>
 
     </section>
 
 </div>
 <script src="favoritesManager.js"></script>
+<script src="locales/en.js"></script>
+<script src="locales/fa.js"></script>
+
+<script src="i18n.js"></script>
 <script src="favorites.js"></script>
 
 </body>

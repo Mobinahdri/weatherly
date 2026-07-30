@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 
 <head>
 
@@ -9,6 +9,12 @@
           content="width=device-width, initial-scale=1.0">
 
     <title>Weatherly | About</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Vazirmatn:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="style.css">
 
@@ -37,23 +43,37 @@
 
     <ul class="nav-links">
 
-        <li><a href="index.html">Home</a></li>
+        <li><a href="index.html" data-i18n="home"></a></li>
 
-        <li><a href="forecast.html">Forecast</a></li>
+        <li><a href="forecast.html" data-i18n="forecast"></a></li>
 
-        <li><a href="details.html">Details</a></li>
+        <li><a href="details.html" data-i18n="details"></a></li>
 
-        <li><a href="favorites.html">Favorites</a></li>
+        <li><a href="favorites.html" data-i18n="favorites"></a></li>
 
-        <li><a class="active" href="about.html">About</a></li>
+        <li><a class="active" href="about.html" data-i18n="about"></a></li>
 
     </ul>
+        <div class="nav-actions">
 
-    <button class="dark-mode-btn">
+           <button
+               id="language-btn"
+               class="language-btn">
 
-        <i class="fa-solid fa-moon"></i>
+            <i class="fa-solid fa-globe"></i>
 
-    </button>
+           <span>EN</span>
+  
+           </button>
+           <button
+           class="dark-mode-btn"
+           aria-label="Dark Mode">
+
+          <i class="fa-solid fa-moon"></i>
+
+          </button>
+
+      </div>
 
 </nav>
 
@@ -69,30 +89,15 @@
 
     </div>
 
-    <h1>
+    <h1 data-i18n="aboutTitle"> </h1>
 
-        About Weatherly
-
-    </h1>
-
-    <p class="about-description">
-
-        Weatherly is a modern weather application that lets you
-        search any city and instantly view the current weather,
-        forecast, and detailed atmospheric information with a
-        clean and elegant interface.
-
-    </p>
+    <p class="about-description" data-i18n="aboutDescription"></p>
 
     <!---------------- INFO CARD ---------------->
 
     <div class="project-card">
 
-        <h2>
-
-            Project Information
-
-        </h2>
+        <h2 data-i18n="projectInformation"></h2>
 
         <div class="project-row">
 
@@ -129,7 +134,10 @@
     </div>
 
 </section>
+<script src="locales/en.js"></script>
+<script src="locales/fa.js"></script>
 
+<script src="i18n.js"></script>
 <script src="about.js"></script>
 
 </div>

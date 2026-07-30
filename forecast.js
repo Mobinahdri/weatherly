@@ -1,95 +1,153 @@
 const API_URL = "http://localhost:3000/api/weather";
 
-const cityTitle = document.getElementById("forecast-city");
-const forecastContainer = document.getElementById("forecast-container");
+/* ==========================================
+                ELEMENTS
+========================================== */
 
-const darkBtn = document.querySelector(".dark-mode-btn");
+const cityTitle = document.getElementById("forecast-city");
+
+const forecastContainer = document.getElementById("forecast-container");
 
 const chartCanvas = document.getElementById("temperatureChart");
 
+const darkBtn = document.querySelector(".dark-mode-btn");
+
 let temperatureChart = null;
 
+let currentForecastData = null;
 
-// Load Page
+let currentCity = localStorage.getItem("selectedCity") || "Shiraz";
 
-window.addEventListener("DOMContentLoaded", () => {
+/* ==========================================
+        WEATHER TRANSLATIONS
+========================================== */
 
+const weatherConditions = {
+  Clear: "صاف",
+
+  Sunny: "آفتابی",
+
+  "Partially cloudy": "نیمه ابری",
+
+  Cloudy: "ابری",
+
+  Overcast: "کاملاً ابری",
+
+  Rain: "بارانی",
+
+  "Light Rain": "باران ملایم",
+
+  "Heavy Rain": "باران شدید",
+
+  Snow: "برفی",
+
+  Fog: "مه",
+
+  Mist: "مه رقیق",
+
+  Thunderstorm: "رعد و برق",
+
+  Windy: "باد شدید",
+};
+
+/* ==========================================
+                HELPERS
+========================================== */
+
+function getLocale() {
+  return currentLanguage === "fa" ? "fa-IR" : "en-US";
+}
+
+function translateCondition(condition) {
+  if (currentLanguage === "en") {
+    return condition;
+  }
+
+  return weatherConditions[condition] || condition;
+}
+
+/* ==========================================
+                PAGE LOAD
+========================================== */
+
+window.addEventListener(
+  "DOMContentLoaded",
+
+  () => {
     loadTheme();
 
-    const city =
-        localStorage.getItem("selectedCity") || "Shiraz";
+    loadForecast(currentCity);
+  },
+);
 
-    loadForecast(city);
+/* ==========================================
+                DARK MODE
+========================================== */
 
-});
+function loadTheme() {
+  const theme = localStorage.getItem("theme");
 
-// Theme
-
-function loadTheme(){
-
-    const theme = localStorage.getItem("theme");
-
-    if(theme === "dark"){
-
-        document.body.classList.add("dark-mode");
-
-    }
-
+  if (theme === "dark") {
+    document.body.classList.add("dark-mode");
+  }
 }
 
-darkBtn.addEventListener("click",()=>{
+if (darkBtn) {
+  darkBtn.addEventListener(
+    "click",
 
-    document.body.classList.toggle("dark-mode");
+    () => {
+      document.body.classList.toggle("dark-mode");
 
-    if(document.body.classList.contains("dark-mode")){
+      localStorage.setItem(
+        "theme",
 
-        localStorage.setItem("theme","dark");
-
-    }else{
-
-        localStorage.setItem("theme","light");
-
-    }
-
-});
-
-// Get Forecast
-
-async function loadForecast(city){
-
-    try{
-
-        const response = await fetch(
-
-            `${API_URL}?city=${encodeURIComponent(city)}`
-
-        );
-
-        const result = await response.json();
-
-        if(!result.success){
-
-            throw new Error("City not found");
-
-        }
-        const weather = result.data;
-
-        cityTitle.textContent = weather.fullName;
-
-        createForecastCards(weather.forecast);
-
-        updateChart(weather.forecast);
-    }
-
-    catch(error){
-
-        alert(error.message);
-
-    }
-
+        document.body.classList.contains("dark-mode") ? "dark" : "light",
+      );
+    },
+  );
 }
 
-// Forecast Cards
+/* ==========================================
+            LOAD FORECAST
+========================================== */
+
+async function loadForecast(city) {
+  try {
+    const response = await fetch(`${API_URL}?city=${encodeURIComponent(city)}`);
+
+    const result = await response.json();
+
+    if (!result.success) {
+      throw new Error(
+        currentLanguage === "fa"
+          ? "شهر پیدا نشد."
+          : result.message || "City not found",
+      );
+    }
+
+    currentForecastData = result.data;
+
+    currentCity = result.data.city;
+
+    localStorage.setItem(
+      "selectedCity",
+
+      currentCity,
+    );
+
+    cityTitle.textContent = result.data.fullName;
+
+    createForecastCards(result.data.forecast);
+
+    updateChart(result.data.forecast);
+  } catch (error) {
+    alert(error.message);
+  }
+}
+/* ==========================================
+            FORECAST CARDS
+========================================== */
 
 function createForecastCards(days){
 
@@ -99,11 +157,11 @@ function createForecastCards(days){
 
         const card = document.createElement("div");
 
-        card.className="forecast-card";
+        card.className = "forecast-card";
 
-        card.style.animationDelay=`${index*0.08}s`;
+        card.style.animationDelay = `${index * 0.08}s`;
 
-        card.innerHTML=`
+        card.innerHTML = `
 
             <h2>
 
@@ -121,24 +179,24 @@ function createForecastCards(days){
 
             <img
                 src="${day.icon}"
-                alt="weather"
+                alt="${translateCondition(day.condition)}"
             >
 
             <h3>
 
-                ${day.condition}
+                ${translateCondition(day.condition)}
 
             </h3>
 
             <p class="max-temp">
 
-                ${day.maxTemp}°
+                ↑ ${Math.round(day.maxTemp)}°
 
             </p>
 
             <p class="min-temp">
 
-                ${day.minTemp}°
+                ↓ ${Math.round(day.minTemp)}°
 
             </p>
 
@@ -150,13 +208,15 @@ function createForecastCards(days){
 
 }
 
-// Date Format
+/* ==========================================
+            DATE FORMAT
+========================================== */
 
 function formatWeekDay(date){
 
     return new Date(date).toLocaleDateString(
 
-        "en-US",
+        getLocale(),
 
         {
 
@@ -172,7 +232,7 @@ function formatDay(date){
 
     return new Date(date).toLocaleDateString(
 
-        "en-US",
+        getLocale(),
 
         {
 
@@ -186,129 +246,263 @@ function formatDay(date){
 
 }
 
-// Chart
+/* ==========================================
+        LANGUAGE CHANGE SUPPORT
+========================================== */
+
+document.addEventListener(
+
+    "languageChanged",
+
+    ()=>{
+
+        if(!currentForecastData) return;
+
+        cityTitle.textContent =
+            currentForecastData.fullName;
+
+        createForecastCards(
+
+            currentForecastData.forecast
+
+        );
+
+        updateChart(
+
+            currentForecastData.forecast
+
+        );
+
+    }
+
+);
+/* ==========================================
+                CHART
+========================================== */
 
 function updateChart(days){
-  const labels = days.map((day) => formatDay(day.date));
 
-  const temperatures = days.map((day) => day.maxTemp);
-  if (temperatureChart === null) {
-    temperatureChart = new Chart(chartCanvas, {
-      type: "line",
+    const labels = days.map(day => formatDay(day.date));
 
-      data: {
-        labels,
+    const temperatures = days.map(
 
-        datasets: [
-          {
-            label: "Temperature",
+        day => Math.round(day.maxTemp)
 
-            data: temperatures,
+    );
 
-            borderColor: "#4f8cff",
+    const datasetLabel =
 
-            backgroundColor: "rgba(79,140,255,.15)",
+        currentLanguage === "fa"
 
-            borderWidth: 4,
+        ?
 
-            fill: true,
+        "دما"
 
-            tension: 0.45,
+        :
 
-            pointRadius: 6,
+        "Temperature";
 
-            pointHoverRadius: 8,
+    if(!temperatureChart){
 
-            pointBackgroundColor: "#4f8cff",
+        temperatureChart = new Chart(
 
-            pointBorderColor: "#ffffff",
+            chartCanvas,
 
-            pointBorderWidth: 2,
-          },
-        ],
-      },
+            {
 
-      options: {
-        responsive: true,
+                type:"line",
 
-        maintainAspectRatio: false,
+                data:{
 
-        animation: {
-          duration: 900,
+                    labels,
 
-          easing: "easeOutQuart",
-        },
+                    datasets:[{
 
-        plugins: {
-          legend: {
-            display: false,
-          },
+                        label:datasetLabel,
 
-          tooltip: {
-            backgroundColor: "#1f2937",
+                        data:temperatures,
 
-            titleColor: "#fff",
+                        borderColor:"#4f8cff",
 
-            bodyColor: "#fff",
+                        backgroundColor:"rgba(79,140,255,.15)",
 
-            displayColors: false,
+                        borderWidth:4,
 
-            callbacks: {
-              label(context) {
-                return `${context.raw}°C`;
-              },
-            },
-          },
-        },
+                        fill:true,
 
-        interaction: {
-          intersect: false,
+                        tension:.45,
 
-          mode: "index",
-        },
+                        pointRadius:6,
 
-        scales: {
-          x: {
-            grid: {
-              display: false,
-            },
+                        pointHoverRadius:8,
 
-            ticks: {
-              color: "#6b7280",
+                        pointBackgroundColor:"#4f8cff",
 
-              font: {
-                size: 14,
+                        pointBorderColor:"#ffffff",
 
-                weight: "600",
-              },
-            },
-          },
+                        pointBorderWidth:2
 
-          y: {
-            beginAtZero: false,
+                    }]
 
-            grid: {
-              color: "rgba(0,0,0,.08)",
-            },
+                },
 
-            ticks: {
-              stepSize: 2,
+                options:{
 
-              color: "#6b7280",
+                    responsive:true,
 
-              callback(value) {
-                return value + "°";
-              },
-            },
-          },
-        },
-      },
-    });
-  } else {
-    temperatureChart.data.labels = labels;
+                    maintainAspectRatio:false,
 
-    temperatureChart.data.datasets[0].data = temperatures;
+                    animation:{
 
-    temperatureChart.update();
-  }
+                        duration:900,
+
+                        easing:"easeOutQuart"
+
+                    },
+
+                    interaction:{
+
+                        intersect:false,
+
+                        mode:"index"
+
+                    },
+
+                    plugins:{
+
+                        legend:{
+
+                            display:false
+
+                        },
+
+                        tooltip:{
+
+                            backgroundColor:"#1f2937",
+
+                            titleColor:"#fff",
+
+                            bodyColor:"#fff",
+
+                            displayColors:false,
+
+                            callbacks:{
+
+                                label(context){
+
+                                    return `${datasetLabel}: ${context.raw}°C`;
+
+                                }
+
+                            }
+
+                        }
+
+                    },
+
+                    scales:{
+
+                        x:{
+
+                            grid:{
+
+                                display:false
+
+                            },
+
+                            ticks:{
+
+                                color:"#6b7280",
+
+                                font:{
+
+                                    size:14,
+
+                                    weight:"600"
+
+                                }
+
+                            }
+
+                        },
+
+                        y:{
+
+                            beginAtZero:false,
+
+                            grid:{
+
+                                color:"rgba(0,0,0,.08)"
+
+                            },
+
+                            ticks:{
+
+                                color:"#6b7280",
+
+                                callback(value){
+
+                                    return value + "°";
+
+                                }
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        );
+
+    }
+
+    else{
+
+        temperatureChart.data.labels = labels;
+
+        temperatureChart.data.datasets[0].label = datasetLabel;
+
+        temperatureChart.data.datasets[0].data = temperatures;
+
+        temperatureChart.update();
+
+    }
+
 }
+
+/* ==========================================
+        LANGUAGE UPDATE
+========================================== */
+
+document.addEventListener(
+
+    "languageChanged",
+
+    ()=>{
+
+        if(currentForecastData){
+
+            cityTitle.textContent =
+                currentForecastData.fullName;
+
+            createForecastCards(
+
+                currentForecastData.forecast
+
+            );
+
+            updateChart(
+
+                currentForecastData.forecast
+
+            );
+
+        }
+
+    }
+
+);
