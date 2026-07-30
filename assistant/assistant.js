@@ -21,6 +21,8 @@ const assistantGreeting = document.getElementById("assistant-greeting");
 let language = localStorage.getItem("language") || "en";
 
 let currentWeather = null;
+let isSending = false;
+const conversationHistory = [];
 document.addEventListener("languageChanged", () => {
   language = localStorage.getItem("language") || "en";
 
@@ -95,24 +97,71 @@ assistantInput?.addEventListener("keydown", (e) => {
   }
 });
 
-function sendMessage() {
+async function sendMessage() {
   const text = assistantInput.value.trim();
 
-  if (!text) return;
+  if (!text || isSending) return;
 
   addMessage(text, "user");
 
   assistantInput.value = "";
 
   showTyping();
+  setSendingState(true);
 
-  setTimeout(() => {
-    removeTyping();
+  try {
+    const answer = await requestAIResponse(text);
 
-    const answer = generateAnswer(text);
+    conversationHistory.push(
+      { role: "user", content: text },
+      { role: "assistant", content: answer }
+    );
 
     addMessage(answer, "bot");
-  }, 700);
+  } catch (error) {
+    console.error("Weatherly AI request failed:", error);
+
+    addMessage(getUnavailableMessage(), "bot");
+  } finally {
+    removeTyping();
+    setSendingState(false);
+    assistantInput.focus();
+  }
+}
+
+async function requestAIResponse(message) {
+  const response = await fetch("http://localhost:3000/api/chat", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      message,
+      language,
+      weather: currentWeather,
+      history: conversationHistory.slice(-6),
+    }),
+  });
+
+  const result = await response.json();
+
+  if (!response.ok || !result.success || !result.data?.answer) {
+    throw new Error(result.message || "AI request failed");
+  }
+
+  return result.data.answer;
+}
+
+function getUnavailableMessage() {
+  return language === "fa"
+    ? "الان نتوانستم به هوش مصنوعی وصل شوم ☁️ لطفاً کمی بعد دوباره امتحان کنید. گزینه‌های آماده‌ی سفر، لباس، فعالیت بیرونی و ایمنی همچنان در دسترس‌اند."
+    : "I couldn't reach the AI just now ☁️ Please try again shortly. The travel, clothing, outdoor, and safety shortcuts are still available.";
+}
+
+function setSendingState(sending) {
+  isSending = sending;
+  assistantInput.disabled = sending;
+  assistantSend.disabled = sending;
 }
 
 /* ==========================================
@@ -124,7 +173,11 @@ function addMessage(text, type) {
 
   message.className = `assistant-message ${type}`;
 
-  message.innerHTML = `<p>${text}</p>`;
+  const paragraph = document.createElement("p");
+
+  paragraph.textContent = text;
+
+  message.appendChild(paragraph);
 
   assistantBody.appendChild(message);
 
