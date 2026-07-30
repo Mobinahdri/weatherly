@@ -138,6 +138,8 @@ html[lang="fa"] body{
     align-items:center;
 
     margin-top:30px;
+
+    position:relative;
 }
 #hero{
     opacity:0;
@@ -187,6 +189,107 @@ html[lang="fa"] body{
     width:60px;
 
     cursor:pointer;
+}
+
+/* Daily weather note */
+
+.weather-note{
+
+    position:absolute;
+
+    top:105px;
+    left:5%;
+
+    width:270px;
+    min-height:155px;
+
+    display:flex;
+    align-items:flex-start;
+    gap:14px;
+
+    padding:20px;
+
+    color:#273449;
+    background:rgba(255,255,255,.22);
+
+    border:1px solid rgba(255,255,255,.38);
+    border-radius:24px;
+
+    backdrop-filter:blur(14px);
+    -webkit-backdrop-filter:blur(14px);
+
+    box-shadow:0 12px 32px rgba(31,41,55,.10);
+
+    opacity:0;
+    transform:translateX(-18px);
+
+    transition:
+        opacity .55s ease,
+        transform .55s ease,
+        background .3s ease;
+}
+
+.weather-note.show{
+
+    opacity:1;
+    transform:translateX(0);
+}
+
+.weather-note-icon{
+
+    width:42px;
+    height:42px;
+
+    flex:0 0 42px;
+
+    display:grid;
+    place-items:center;
+
+    color:#3b82f6;
+    background:rgba(255,255,255,.52);
+
+    border-radius:14px;
+
+    font-size:18px;
+}
+
+.weather-note-content{
+
+    min-width:0;
+}
+
+.weather-note-label{
+
+    display:block;
+
+    margin-bottom:7px;
+
+    color:#3b82f6;
+
+    font-size:12px;
+    font-weight:700;
+    letter-spacing:.02em;
+}
+
+.weather-note p{
+
+    margin:0;
+
+    font-size:14px;
+    font-weight:500;
+    line-height:1.55;
+}
+
+.weather-note-context{
+
+    display:block;
+
+    margin-top:10px;
+
+    color:#526174;
+
+    font-size:11px;
+    font-weight:600;
 }
 
 .weather-info{
@@ -584,6 +687,30 @@ body.dark-mode .detail-card h3{
     color:white;
 
 }
+
+body.dark-mode .weather-note{
+
+    color:white;
+    background:rgba(17,24,39,.45);
+
+    border-color:rgba(255,255,255,.10);
+}
+
+body.dark-mode .weather-note-icon{
+
+    color:#93c5fd;
+    background:rgba(255,255,255,.09);
+}
+
+body.dark-mode .weather-note-label{
+
+    color:#93c5fd;
+}
+
+body.dark-mode .weather-note-context{
+
+    color:#d1d5db;
+}
 .dark-mode-btn{
 
     width:50px;
@@ -714,4 +841,42 @@ body.dark-mode .detail-card h3{
 
     font-size:16px;
 
+}
+
+@media(max-width:1200px){
+
+    .weather-note{
+
+        position:relative;
+
+        top:auto;
+        left:auto;
+        right:auto;
+
+        width:min(500px, 90%);
+        min-height:auto;
+
+        margin-top:22px;
+
+        transform:translateY(12px);
+    }
+
+    .weather-note.show{
+
+        transform:translateY(0);
+    }
+}
+
+@media(max-width:600px){
+
+    .search-box{
+
+        width:90%;
+    }
+
+    .weather-note{
+
+        padding:17px;
+        border-radius:20px;
+    }
 }
