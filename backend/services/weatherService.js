@@ -213,6 +213,8 @@ async function getWeather(city) {
 
       uvIndex: day.uvindex,
 
+      precipitationProbability: day.precipprob,
+
       sunrise: day.sunrise.substring(0, 5),
 
       sunset: day.sunset.substring(0, 5),

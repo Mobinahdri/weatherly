@@ -413,6 +413,10 @@ async function getWeather(city){
 
         );
 
+        document.dispatchEvent(
+          new CustomEvent("weatherCityChanged", { detail: data }),
+        );
+
         updateWeatherUI(data);
 
         updateFavoriteButton();
